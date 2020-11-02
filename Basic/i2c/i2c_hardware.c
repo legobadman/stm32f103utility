@@ -18,7 +18,7 @@
 
 
 
-#include "i2c.h"
+#include "i2c_hardware.h"
 #include <stdio.h>
 
 

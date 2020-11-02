@@ -19,6 +19,7 @@
 #include "sys.h"
 #include "delay.h"
 #include "usart.h"
+#include "i2c_hardware.h"
 #include "MPU6050.h"
 #include "math.h"
 

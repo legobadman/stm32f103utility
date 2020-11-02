@@ -1,5 +1,5 @@
-#ifndef __I2C_H
-#define __I2C_H	 
+#ifndef __I2C_HARDWARE_H__
+#define __I2C_HARDWARE_H__	 
 #include "sys.h"
 //#include "NUC123.h"
 

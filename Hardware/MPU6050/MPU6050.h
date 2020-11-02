@@ -1,7 +1,7 @@
 #ifndef __MPU6050_H
 #define __MPU6050_H	 
 #include "sys.h"
-#include "i2c.h"
+#include "i2c_hardware.h"
 #include "delay.h"
 
 
