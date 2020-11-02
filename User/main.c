@@ -18,14 +18,9 @@
 #include "stm32f10x.h" //STM32头文件
 #include "sys.h"
 #include "delay.h"
-#include "relay.h"
-#include "oled0561.h"
 #include "usart.h"
-#include "ioi2c.h"
 #include "MPU6050.h"
 #include "math.h"
-#include "fbm320.h"
-#include "bmp280.h"
 
 #define X_ACCEL_OFFSET -15000 
 #define Y_ACCEL_OFFSET -7400 
@@ -123,49 +118,13 @@ void check_angle(void) {
 	delay_ms(100);
 }
 
-void print_rslt(const char api_name[], int8_t rslt)
-{
-    if (rslt != BMP280_OK)
-    {
-        printf("%s\t", api_name);
-        if (rslt == BMP280_E_NULL_PTR)
-        {
-            printf("Error [%d] : Null pointer error\r\n", rslt);
-        }
-        else if (rslt == BMP280_E_COMM_FAIL)
-        {
-            printf("Error [%d] : Bus communication failed\r\n", rslt);
-        }
-        else if (rslt == BMP280_E_IMPLAUS_TEMP)
-        {
-            printf("Error [%d] : Invalid Temperature\r\n", rslt);
-        }
-        else if (rslt == BMP280_E_DEV_NOT_FOUND)
-        {
-            printf("Error [%d] : Device not found\r\n", rslt);
-        }
-        else
-        {
-            /* For more error codes refer "*_defs.h" */
-            printf("Error [%d] : Unknown error code\r\n", rslt);
-        }
-    }
-}
-
 
 int main (void){//主程序
 	int8_t err = -1, rslt = 0;
-	struct bmp280_dev bmp;
 	delay_ms(500); //上电时等待其他器件就绪
 	RCC_Configuration(); //系统时钟初始化 
 	USART1_Init(115200);
 	I2C_Configuration();//I2C初始化
-	
-	bmp.delay_ms = delay_ms;
-	bmp.dev_id = BMP280_I2C_ADDR_PRIM;
-	bmp.intf = BMP280_I2C_INTF;
-	bmp.read = i2c_reg_read;
-    bmp.write = i2c_reg_write;
 	
 	//rslt = bmp280_init(&bmp);
 	//while (1)
@@ -173,8 +132,6 @@ int main (void){//主程序
 	//	printf("%d\r\n", rslt);
 	//	//print_rslt(" bmp280_init status", rslt);
 	//}
-	
-	
 	
 	MPU6050_Init(); //MPU6050初始化
 	//SPI_GPIO_Init();

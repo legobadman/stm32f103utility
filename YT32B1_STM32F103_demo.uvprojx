@@ -14,7 +14,7 @@
         <TargetCommonOption>
           <Device>STM32F103C8</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32F1xx_DFP.1.1.0</PackID>
+          <PackID>Keil.STM32F1xx_DFP.2.3.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IROM(0x08000000,0x10000) IRAM(0x20000000,0x5000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -524,16 +524,6 @@
               <FilePath>.\Basic\usart\usart.h</FilePath>
             </File>
             <File>
-              <FileName>IOI2C.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Basic\dmp\IOI2C.c</FilePath>
-            </File>
-            <File>
-              <FileName>fbm320.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Basic\fbm320\fbm320.c</FilePath>
-            </File>
-            <File>
               <FileName>nrf24l01.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Basic\NRF24L01\nrf24l01.c</FilePath>
@@ -542,21 +532,6 @@
               <FileName>spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Basic\spi\spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>bmp280.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Basic\bmp280\bmp280.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Hardware</GroupName>
-          <Files>
-            <File>
-              <FileName>MPU6050.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\MPU6050\MPU6050.c</FilePath>
             </File>
           </Files>
         </Group>

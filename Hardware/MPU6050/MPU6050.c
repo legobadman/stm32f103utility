@@ -19,7 +19,6 @@
 
 
 #include "MPU6050.h"
-#include "IOI2C.h"
 #include "usart.h"
 #include <math.h>
 
