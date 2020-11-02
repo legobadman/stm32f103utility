@@ -20,6 +20,7 @@
 #include "delay.h"
 #include "usart.h"
 #include "i2c_hardware.h"
+#include "i2c_software.h"
 #include "MPU6050.h"
 #include "math.h"
 
@@ -37,6 +38,7 @@ typedef struct Angle
     double Y_Angle;
     double Z_Angle;   
 } MPU6050_Angle;
+
 
 
 void check_data(void) {
@@ -91,7 +93,11 @@ void display_data(void) {
 
 void to_ground(void) {
 	u16	t[6]={0};
+#ifdef I2c_Hardware
 	MPU6050_READ(t);
+#else
+	MPU6050_READ3(t);
+#endif
 	printf("%d,%d,%d,%d,%d,%d\r\n", t[0], t[1], t[2], t[3], t[4], t[5]);
 	delay_ms(10);
 }
@@ -119,14 +125,18 @@ void check_angle(void) {
 	delay_ms(100);
 }
 
+//#define I2c_Hardware
 
 int main (void){//主程序
 	int8_t err = -1, rslt = 0;
 	delay_ms(500); //上电时等待其他器件就绪
 	RCC_Configuration(); //系统时钟初始化 
 	USART1_Init(115200);
+#ifdef I2c_Hardware
 	I2C_Configuration();//I2C初始化
-	
+#else
+	IIC_Init();
+#endif	
 	//rslt = bmp280_init(&bmp);
 	//while (1)
 	//{
@@ -134,7 +144,11 @@ int main (void){//主程序
 	//	//print_rslt(" bmp280_init status", rslt);
 	//}
 	
+#ifdef I2c_Hardware
 	MPU6050_Init(); //MPU6050初始化
+#else
+	MPU6050_Init2(); //MPU6050初始化
+#endif
 	//SPI_GPIO_Init();
 	//SPI1_Init();
 	//err = fbm320_init();

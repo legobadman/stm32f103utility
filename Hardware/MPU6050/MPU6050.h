@@ -364,16 +364,9 @@ extern float Pitch,Roll;
 
 
 void MPU6050_Init(void);
+void MPU6050_Init2(void);
 void MPU6050_READ(u16* n);
 void MPU6050_READ2(int16_t* n);
+void MPU6050_READ3(u16* n);
 
-void MPU6050_initialize(void); //初始化
-uint8_t MPU6050_testConnection(void); //检测MPU6050是否存在
-uint8_t MPU6050_getDeviceID(void);
-void MPU6050_getMotion6(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz);
-void MPU6050_getlastMotion6(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz);
-void DMP_Init(void);
-uint8_t Read_DMP(float* Pitch,float* Roll,float* Yaw);
-int Read_Temperature(void);
-		 				    
 #endif
