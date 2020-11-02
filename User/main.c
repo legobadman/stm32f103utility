@@ -23,6 +23,7 @@
 #include "i2c_software.h"
 #include "MPU6050.h"
 #include "math.h"
+#include "bmp280.h"
 
 #define X_ACCEL_OFFSET -15000 
 #define Y_ACCEL_OFFSET -7400 
@@ -126,9 +127,12 @@ void check_angle(void) {
 }
 
 //#define I2c_Hardware
+#define DEBUG_MPU6050
+//#define DEBUG_BMP
 
 int main (void){//主程序
-	int8_t err = -1, rslt = 0;
+	int8_t err = -1;
+	unsigned char c = 0;
 	delay_ms(500); //上电时等待其他器件就绪
 	RCC_Configuration(); //系统时钟初始化 
 	USART1_Init(115200);
@@ -143,15 +147,24 @@ int main (void){//主程序
 	//	printf("%d\r\n", rslt);
 	//	//print_rslt(" bmp280_init status", rslt);
 	//}
-	
+
+#ifdef DEBUG_MPU6050	
 #ifdef I2c_Hardware
 	MPU6050_Init(); //MPU6050初始化
 #else
 	MPU6050_Init2(); //MPU6050初始化
 #endif
+#endif
 	//SPI_GPIO_Init();
 	//SPI1_Init();
 	//err = fbm320_init();
+	
+#ifdef DEBUG_BMP	
+	c = bmp280_init();
+	while (1) {
+		printf("%d\r\n", c);
+	}
+#endif
 
 	//NRF24L01_Init();
 

@@ -60,6 +60,7 @@ u8 IIC_Wait_Ack(void)
 		}
 		delay_us(1);
 	}
+	//printf("Wait_Ack Succeed!\r\n");
 	IIC_SCL = 0;	//Ê±ÖÓÊä³ö0 	   
 	return 0;
 }
@@ -151,9 +152,6 @@ unsigned char I2C_ReadOneByte(unsigned char I2C_Addr, unsigned char addr)
 	unsigned char res = 0;
 
 	IIC_Start();
-
-
-
 
 	IIC_Send_Byte(I2C_Addr);	   //·¢ËÍĞ´ÃüÁî
 	res++;
