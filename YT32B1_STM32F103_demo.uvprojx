@@ -365,7 +365,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F10X_MD</Define>
               <Undefine></Undefine>
-              <IncludePath>.\CMSIS;.\Lib\inc;.\Lib\src;.\User;.\Startup;.\Basic\delay;.\Basic\sys;.\Basic\i2c;.\Hardware\MPU6050;.\Basic\usart;.\Basic\dmp;.\Basic\fbm320;.\Basic\NRF24L01;.\Basic\spi;.\Basic\bmp280</IncludePath>
+              <IncludePath>.\CMSIS;.\Lib\inc;.\Lib\src;.\User;.\Startup;.\Basic\delay;.\Basic\sys;.\Basic\i2c;.\Hardware\MPU6050;.\Basic\usart;.\Basic\dmp;.\Basic\fbm320;.\Basic\NRF24L01;.\Basic\spi;.\Basic\bmp280;.\Hardware\NRF24L01;.\Hardware\BMP280;.\Hardware\HMC5883L;C:\Keil_v5\ARM\ARMCC\include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -523,6 +523,11 @@
               <FileType>1</FileType>
               <FilePath>.\Basic\i2c\i2c_hardware.c</FilePath>
             </File>
+            <File>
+              <FileName>i2c_software.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Basic\i2c\i2c_software.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -537,6 +542,16 @@
               <FileName>nrf24l01.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Hardware\NRF24L01\nrf24l01.c</FilePath>
+            </File>
+            <File>
+              <FileName>bmp280.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\BMP280\bmp280.c</FilePath>
+            </File>
+            <File>
+              <FileName>HMC5883L.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\HMC5883L\HMC5883L.c</FilePath>
             </File>
           </Files>
         </Group>
