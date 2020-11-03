@@ -147,6 +147,7 @@ int main (void){//主程序
 	bool wtf = false;
 	unsigned char c = 0;
 	delay_ms(500); //上电时等待其他器件就绪
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	RCC_Configuration(); //系统时钟初始化 
 	USART1_Init(115200);
 
@@ -171,7 +172,8 @@ int main (void){//主程序
 	NRF24L01_TX_Mode();
 	while(1)
 	{
-		if (NRF24L01_TX_Packet(txbuf) == TX_OK)
+		ret = NRF24L01_TX_Packet(txbuf);
+		if (ret == TX_OK)
 		{
 			printf("nrf1 send is sucessed!\r\n");
 			printf("\r\n");
@@ -180,7 +182,9 @@ int main (void){//主程序
 				printf("nrf1 send data is %d \r\n",txbuf[i]);
 			}
 		}
-		
+		else {
+			printf("ret != TX_OK\r\n");
+		}
 		delay_ms(500);
 	}
 #endif
@@ -188,19 +192,23 @@ int main (void){//主程序
 	NRF24L01_RX_Mode();
 	while(1)
 	{
-		NRF24L01_RX_Packet(rxbuf);
 		ret = NRF24L01_RX_Packet(rxbuf);
+		if (ret == 0)
+		{
+			for(i=0;i<5;i++)
+			{
+				printf("nrf recieve data is %d \r\n",rxbuf[i]);
+			}
+			printf("nrf recieves data sucessed!\r\n");
+		}
+		else
+		{
+			printf("something wrong\r\n");
+		}
+		delay_ms(500);	 //延时300ms
 	}
-	printf("RX mode ret is %d\r\n",ret);
-	for(i=0;i<5;i++)
-	{
-		printf("nrf recieve data is %d \r\n",rxbuf[i]);
-	}
-	printf("nrf recieves data sucessed!\r\n");
-	delay_ms(500);	 //延时300ms
-#endif
-
 	
+#endif
 	while (1) {
 		printf("nrf24l01 01 succeed!!!\r\n");
 	}
