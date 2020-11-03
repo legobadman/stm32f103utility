@@ -235,6 +235,7 @@ uint8_t NRF24L01_TX_Packet(uint8_t *txbuf)
 	NRF24L01_Write_Buf(W_TX_PAYLOAD, TX_PLOAD_WIDTH, txbuf);//写数据到txbuf,32字节
 	NRF_CE_HIGH;//启动发送
 	while (NRF_IRQ_STATUS);//等待发送完成
+	while(1) {printf("send finish\r\n");}
 	ret = NRF24L01_Read_Reg(NRF24L01_STATUS);//读取状态寄存器的值
 	NRF24L01_Write_Reg(W_REGISTER+NRF24L01_STATUS, ret);//清除TX_DS or MAX_RT的中断标志
 	if(ret&MAX_TX)//达到最大重发次数

@@ -132,11 +132,18 @@ void check_angle(void) {
 //#define I2c_Hardware
 //#define DEBUG_MPU6050
 //#define DEBUG_HMC5883
+
 #define DEBUG_NRF24L01
+#define NRF_TX
+//define NRF_RX
+uint8_t txbuf[5]={1,2,3,4,5};
+uint8_t rxbuf[5]={0,0,0,0,0};
+
 //#define DEBUG_BMP
 
 int main (void){//主程序
 	int8_t err = -1;
+	uint8_t ret,i;
 	bool wtf = false;
 	unsigned char c = 0;
 	delay_ms(500); //上电时等待其他器件就绪
@@ -159,6 +166,41 @@ int main (void){//主程序
 	{
 		printf("nrf24l01 01 failed!\r\n");
 	}
+
+#ifdef NRF_TX
+	NRF24L01_TX_Mode();
+	while(1)
+	{
+		if (NRF24L01_TX_Packet(txbuf) == TX_OK)
+		{
+			printf("nrf1 send is sucessed!\r\n");
+			printf("\r\n");
+			for(i=0;i<5;i++)
+			{
+				printf("nrf1 send data is %d \r\n",txbuf[i]);
+			}
+		}
+		
+		delay_ms(500);
+	}
+#endif
+#ifdef NRF_RX
+	NRF24L01_RX_Mode();
+	while(1)
+	{
+		NRF24L01_RX_Packet(rxbuf);
+		ret = NRF24L01_RX_Packet(rxbuf);
+	}
+	printf("RX mode ret is %d\r\n",ret);
+	for(i=0;i<5;i++)
+	{
+		printf("nrf recieve data is %d \r\n",rxbuf[i]);
+	}
+	printf("nrf recieves data sucessed!\r\n");
+	delay_ms(500);	 //延时300ms
+#endif
+
+	
 	while (1) {
 		printf("nrf24l01 01 succeed!!!\r\n");
 	}
@@ -170,6 +212,16 @@ int main (void){//主程序
 #else
 	MPU6050_Init2(); //MPU6050初始化
 #endif
+	while(1) {
+		to_ground();
+		//check_data();
+		//display_data();
+		//printf("Hello, World.\r\n");
+		//to_ground();
+		//check_angle();
+		//printf("Read_DMP Return is %d\n",Read_DMP(&Pitch,&Roll,&Yaw));
+		//printf("Pitch is:%f,Roll is:%f,Yaw is:%f\n",Pitch,Roll,Yaw);
+	}
 #endif
 
 	
@@ -194,19 +246,6 @@ int main (void){//主程序
 #endif
 
 
-
-#ifdef DEBUG_MPU6050
-	while(1){
-		//printf("%d\r\n", err);
-		//check_data();
-		//display_data();
-		//printf("Hello, World.\r\n");
-		to_ground();
-		//check_angle();
-		//printf("Read_DMP Return is %d\n",Read_DMP(&Pitch,&Roll,&Yaw));
-		//printf("Pitch is:%f,Roll is:%f,Yaw is:%f\n",Pitch,Roll,Yaw);
-	}
-#endif
 }
 
 /*********************************************************************************************
