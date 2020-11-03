@@ -21,9 +21,12 @@
 #include "usart.h"
 #include "i2c_hardware.h"
 #include "i2c_software.h"
+#include "spi.h"
 #include "MPU6050.h"
 #include "math.h"
 #include "bmp280.h"
+#include "HMC5883L.h"
+#include "nrf24l01.h"
 
 #define X_ACCEL_OFFSET -15000 
 #define Y_ACCEL_OFFSET -7400 
@@ -127,26 +130,39 @@ void check_angle(void) {
 }
 
 //#define I2c_Hardware
-#define DEBUG_MPU6050
+//#define DEBUG_MPU6050
+//#define DEBUG_HMC5883
+#define DEBUG_NRF24L01
 //#define DEBUG_BMP
 
 int main (void){//主程序
 	int8_t err = -1;
+	bool wtf = false;
 	unsigned char c = 0;
 	delay_ms(500); //上电时等待其他器件就绪
 	RCC_Configuration(); //系统时钟初始化 
 	USART1_Init(115200);
+
 #ifdef I2c_Hardware
 	I2C_Configuration();//I2C初始化
 #else
 	IIC_Init();
-#endif	
-	//rslt = bmp280_init(&bmp);
-	//while (1)
-	//{
-	//	printf("%d\r\n", rslt);
-	//	//print_rslt(" bmp280_init status", rslt);
-	//}
+#endif
+
+	SPI_GPIO_Init();
+	SPI1_Init();
+
+#ifdef DEBUG_NRF24L01	
+	NRF24L01_Init();
+	printf("nrf24l01 start!\r\n");
+	while (NRF24L01_Check())
+	{
+		printf("nrf24l01 01 failed!\r\n");
+	}
+	while (1) {
+		printf("nrf24l01 01 succeed!!!\r\n");
+	}
+#endif
 
 #ifdef DEBUG_MPU6050	
 #ifdef I2c_Hardware
@@ -155,27 +171,32 @@ int main (void){//主程序
 	MPU6050_Init2(); //MPU6050初始化
 #endif
 #endif
-	//SPI_GPIO_Init();
-	//SPI1_Init();
-	//err = fbm320_init();
+
+	
+#ifdef DEBUG_HMC5883
+	HMC5883L_I2C_Init();
+	//HMC5883L_Initialize();
+	wtf = HMC5883L_TestConnection();
+	while (1) {
+		if (wtf) {
+			printf("succeed!\r\n");
+		} else {
+			printf("failed!\r\n");
+		}
+	}
+#endif
 	
 #ifdef DEBUG_BMP	
 	c = bmp280_init();
 	while (1) {
-		printf("%d\r\n", c);
+		printf("id: %d\r\n", c);
 	}
 #endif
 
-	//NRF24L01_Init();
 
-	//printf("nrf24l01 start!\r\n");
-	//while (NRF24L01_Check())
-	//{
-	//		printf("nrf24l01 01 failed!\r\n");
-	//}
 
+#ifdef DEBUG_MPU6050
 	while(1){
-		//printf("nrf24l01 01 succeed!!!\r\n");
 		//printf("%d\r\n", err);
 		//check_data();
 		//display_data();
@@ -185,6 +206,7 @@ int main (void){//主程序
 		//printf("Read_DMP Return is %d\n",Read_DMP(&Pitch,&Roll,&Yaw));
 		//printf("Pitch is:%f,Roll is:%f,Yaw is:%f\n",Pitch,Roll,Yaw);
 	}
+#endif
 }
 
 /*********************************************************************************************
