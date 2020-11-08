@@ -133,13 +133,13 @@ void check_angle(void) {
 //#define DEBUG_MPU6050
 //#define DEBUG_HMC5883
 
-#define DEBUG_NRF24L01
-#define NRF_TX
+//#define DEBUG_NRF24L01
+//#define NRF_TX
 //define NRF_RX
 uint8_t txbuf[5]={1,2,3,4,5};
 uint8_t rxbuf[5]={0,0,0,0,0};
 
-//#define DEBUG_BMP
+#define DEBUG_BMP
 
 int main (void){//主程序
 	int8_t err = -1;
@@ -147,7 +147,7 @@ int main (void){//主程序
 	bool wtf = false;
 	unsigned char c = 0;
 	delay_ms(500); //上电时等待其他器件就绪
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+	//NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	RCC_Configuration(); //系统时钟初始化 
 	USART1_Init(115200);
 
@@ -157,8 +157,8 @@ int main (void){//主程序
 	IIC_Init();
 #endif
 
-	SPI_GPIO_Init();
-	SPI1_Init();
+	//SPI_GPIO_Init();
+	//SPI1_Init();
 
 #ifdef DEBUG_NRF24L01	
 	NRF24L01_Init();
@@ -181,6 +181,10 @@ int main (void){//主程序
 			{
 				printf("nrf1 send data is %d \r\n",txbuf[i]);
 			}
+		}
+		else if (ret == MAX_TX)
+		{
+			printf("ret = MAX_TX\r\n");
 		}
 		else {
 			printf("ret != TX_OK\r\n");
@@ -249,7 +253,7 @@ int main (void){//主程序
 #ifdef DEBUG_BMP	
 	c = bmp280_init();
 	while (1) {
-		printf("id: %d\r\n", c);
+		printf("id: %4x\r\n", c);
 	}
 #endif
 

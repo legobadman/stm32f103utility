@@ -40,27 +40,6 @@ void NRF24L01_GPIO_Init(void)
 	
 	GPIO_SetBits(GPIOA,NRF_IRQ|NRF_CE);
 	GPIO_SetBits(GPIOA,NRF_CS);
-
-//第二模块相关的GPIO
-	/*	
-	GPIO_InitStructure.GPIO_Pin = NRF_CE2;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOC,&GPIO_InitStructure);
-	
-	GPIO_InitStructure.GPIO_Pin = NRF_IRQ2;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOC,&GPIO_InitStructure);
-	
-	GPIO_InitStructure.GPIO_Pin = NRF_CS2;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOC,&GPIO_InitStructure);
-	
-	GPIO_SetBits(GPIOC,NRF_IRQ2|NRF_CE2);
-	GPIO_SetBits(GPIOC,NRF_CS2);
-	*/
 }
 
 /*****************************************************************************
@@ -234,7 +213,13 @@ uint8_t NRF24L01_TX_Packet(uint8_t *txbuf)
 	NRF_CE_LOW;
 	NRF24L01_Write_Buf(W_TX_PAYLOAD, TX_PLOAD_WIDTH, txbuf);//写数据到txbuf,32字节
 	NRF_CE_HIGH;//启动发送
-	while (NRF_IRQ_STATUS);//等待发送完成
+	
+	delay_ms(500);
+	//while (NRF_IRQ_STATUS)//等待发送完成
+	{
+		
+	}
+	
 	ret = NRF24L01_Read_Reg(NRF24L01_STATUS);//读取状态寄存器的值
 	NRF24L01_Write_Reg(W_REGISTER+NRF24L01_STATUS, ret);//清除TX_DS or MAX_RT的中断标志
 	if(ret&MAX_TX)//达到最大重发次数
