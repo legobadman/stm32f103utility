@@ -24,7 +24,18 @@ extern u8  USART3_RX_BUF[USART3_REC_LEN]; //½ÓÊÕ»º³å,×î´óUSART_REC_LEN¸ö×Ö½Ú.Ä©×
  
 extern u16 USART1_RX_STA;         		//½ÓÊÕ×´Ì¬±ê¼Ç	
 extern u16 USART2_RX_STA;         		//½ÓÊÕ×´Ì¬±ê¼Ç	
-extern u16 USART3_RX_STA;         		//½ÓÊÕ×´Ì¬±ê¼Ç	
+extern u16 USART3_RX_STA;         		//½ÓÊÕ×´Ì¬±ê¼Ç
+
+typedef struct
+{
+	u16 volatile Wd_Indx;
+	u16 volatile Rd_Indx;
+	u16 Mask;
+	u8* pbuf;
+} UartBuf;
+
+extern UartBuf UartTxbuf;	//»·ĞÎ·¢ËÍ½á¹¹Ìå
+extern UartBuf UartRxbuf;	//»·ĞÎ½ÓÊÕ½á¹¹Ìå
 
 //º¯ÊıÉùÃ÷
 void USART1_Init(u32 bound);//´®¿Ú1³õÊ¼»¯²¢Æô¶¯
@@ -41,6 +52,12 @@ extern u8  USART_RX_BUF[USART_REC_LEN]; //½ÓÊÕ»º³å,×î´óUSART_REC_LEN¸ö×Ö½Ú.Ä©×Ö½
 extern u16 USART_RX_STA;         		//½ÓÊÕ×´Ì¬±ê¼Ç	
 //Èç¹ûÏë´®¿ÚÖĞ¶Ï½ÓÊÕ£¬Çë²»Òª×¢ÊÍÒÔÏÂºê¶¨Òå
 void uart_init(u32 bound);
+
+void UART1_Put_Char(unsigned char DataToSend);
+u8 Uart1_Put_Char(unsigned char DataToSend);
+void UartBuf_WD(UartBuf* Ringbuf, u8 DataIn);
+u8 UartBuf_RD(UartBuf* Ringbuf);
+u16 UartBuf_Cnt(UartBuf* Ringbuf);
 
 #endif
 

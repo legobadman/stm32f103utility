@@ -413,8 +413,58 @@ a符号的作用：
 
 */
 
+UartBuf UartTxbuf;//环形发送结构体
+UartBuf UartRxbuf;//环形接收结构体
 
+void UART1_Put_Char(unsigned char DataToSend)
+{
+	UartBuf_WD(&UartTxbuf, DataToSend);//将待发送数据放在环形缓冲数组中
+	USART_ITConfig(USART1, USART_IT_TXE, ENABLE); //启动发送中断开始啪啪啪发送缓冲中的数据
+}
 
+u8 Uart1_Put_Char(unsigned char DataToSend)
+{
+	UartBuf_WD(&UartTxbuf, DataToSend);//将待发送数据放在环形缓冲数组中
+	USART_ITConfig(USART1, USART_IT_TXE, ENABLE);  //启动发送中断开始啪啪啪发送缓冲中的数据
+	return DataToSend;
+}
 
+u8 UartBuf_RD(UartBuf* Ringbuf)
+{
+	u8 temp;
+	temp = Ringbuf->pbuf[Ringbuf->Rd_Indx & Ringbuf->Mask];
+	Ringbuf->Rd_Indx++;
+	return temp;
+}
 
+//将一个字节写入一个环形结构体中
+void UartBuf_WD(UartBuf* Ringbuf, u8 DataIn)
+{
+	Ringbuf->pbuf[Ringbuf->Wd_Indx & Ringbuf->Mask] = DataIn;
+	Ringbuf->Wd_Indx++;
+}
 
+u16 UartBuf_Cnt(UartBuf* Ringbuf)
+{
+	return (Ringbuf->Wd_Indx - Ringbuf->Rd_Indx) & Ringbuf->Mask;//数据长度掩码很重要，这是决定数据环形的关键
+}
+
+volatile uint8_t Udatatmp;//串口接收临时数据字节
+
+void USART1_IRQHandler233(void)
+{
+	if (USART_GetITStatus(USART1, USART_IT_TXE) != RESET)
+	{
+		USART_SendData(USART1, UartBuf_RD(&UartTxbuf));
+		if (UartBuf_Cnt(&UartTxbuf) == 0)
+			USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
+	}
+	else if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
+	{
+		USART_ClearITPendingBit(USART1, USART_IT_RXNE);//清除接收中断标志
+		//此种环形缓冲数组串口接收方式，适用于解包各种数据，很方便。对数据的要求是:
+		//发送方必须要求有数据包头，以便解决串口数据无地址的问题
+		Udatatmp = (uint8_t)USART_ReceiveData(USART1);          //临时数据赋值
+		UartBuf_WD(&UartRxbuf, Udatatmp);               //写串口接收缓冲数组
+	}
+}

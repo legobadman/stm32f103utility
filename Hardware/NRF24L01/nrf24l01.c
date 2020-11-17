@@ -213,9 +213,8 @@ uint8_t NRF24L01_TX_Packet(uint8_t *txbuf)
 	NRF_CE_LOW;
 	NRF24L01_Write_Buf(W_TX_PAYLOAD, TX_PLOAD_WIDTH, txbuf);//写数据到txbuf,32字节
 	NRF_CE_HIGH;//启动发送
-	
-	delay_ms(500);
-	//while (NRF_IRQ_STATUS)//等待发送完成
+
+	while (NRF_IRQ_STATUS)//等待发送完成
 	{
 		
 	}

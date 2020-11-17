@@ -25,8 +25,10 @@
 #include "MPU6050.h"
 #include "math.h"
 #include "bmp280.h"
+#include "fbm320.h"
 #include "HMC5883L.h"
 #include "nrf24l01.h"
+#include "BT.h"
 
 #define X_ACCEL_OFFSET -15000 
 #define Y_ACCEL_OFFSET -7400 
@@ -34,6 +36,9 @@
 #define X_GYRO_OFFSET -53 
 #define Y_GYRO_OFFSET 270
 #define Z_GYRO_OFFSET 144
+
+#define ENABLE_I2C
+#define I2c_Hardware
 
 
 typedef struct Angle
@@ -129,17 +134,20 @@ void check_angle(void) {
 	delay_ms(100);
 }
 
-//#define I2c_Hardware
-//#define DEBUG_MPU6050
+
+#define DEBUG_MPU6050
 //#define DEBUG_HMC5883
+//#define DEBUG_BT
 
 //#define DEBUG_NRF24L01
 //#define NRF_TX
-//define NRF_RX
-uint8_t txbuf[5]={1,2,3,4,5};
+//#define NRF_RX
+//#define DEBUG_FBM320
+
+uint8_t txbuf[5]={2,2,10,14,25};
 uint8_t rxbuf[5]={0,0,0,0,0};
 
-#define DEBUG_BMP
+//#define DEBUG_BMP
 
 int main (void){//主程序
 	int8_t err = -1;
@@ -151,22 +159,31 @@ int main (void){//主程序
 	RCC_Configuration(); //系统时钟初始化 
 	USART1_Init(115200);
 
+#ifdef ENABLE_I2C
 #ifdef I2c_Hardware
 	I2C_Configuration();//I2C初始化
 #else
 	IIC_Init();
 #endif
+#endif
 
-	//SPI_GPIO_Init();
-	//SPI1_Init();
+#ifdef DEBUG_BT	
+	BT_PowerInit();
+	BT_init();
+	while(1) {
+	}
+#endif
 
-#ifdef DEBUG_NRF24L01	
+#ifdef DEBUG_NRF24L01
+	SPI_GPIO_Init();
+	SPI1_Init();
 	NRF24L01_Init();
 	printf("nrf24l01 start!\r\n");
 	while (NRF24L01_Check())
 	{
 		printf("nrf24l01 01 failed!\r\n");
 	}
+#endif
 
 #ifdef NRF_TX
 	NRF24L01_TX_Mode();
@@ -192,6 +209,7 @@ int main (void){//主程序
 		delay_ms(500);
 	}
 #endif
+
 #ifdef NRF_RX
 	NRF24L01_RX_Mode();
 	while(1)
@@ -210,11 +228,6 @@ int main (void){//主程序
 			printf("something wrong\r\n");
 		}
 		delay_ms(500);	 //延时300ms
-	}
-	
-#endif
-	while (1) {
-		printf("nrf24l01 01 succeed!!!\r\n");
 	}
 #endif
 
@@ -257,6 +270,9 @@ int main (void){//主程序
 	}
 #endif
 
+#ifdef DEBUG_FBM320
+	fbm320_init();
+#endif
 
 }
 
