@@ -32,5 +32,6 @@
 #define BMP280_OVERSAMP_16X				(0x05)
 
 unsigned char bmp280_init();
+void bmp280GetData(float* pressure, float* temperature, float* asl);
 
 #endif

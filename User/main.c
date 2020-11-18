@@ -38,7 +38,7 @@
 #define Z_GYRO_OFFSET 144
 
 #define ENABLE_I2C
-#define I2c_Hardware
+//#define I2c_Hardware
 
 
 typedef struct Angle
@@ -138,7 +138,7 @@ void check_angle(void) {
 #define DEBUG_MPU6050
 //#define DEBUG_HMC5883
 //#define DEBUG_BT
-
+//#define DEBUG_BMP
 //#define DEBUG_NRF24L01
 //#define NRF_TX
 //#define NRF_RX
@@ -154,10 +154,12 @@ int main (void){//主程序
 	uint8_t ret,i;
 	bool wtf = false;
 	unsigned char c = 0;
+	float pressure = 0, temperature = 0, asl = 0;
 	delay_ms(500); //上电时等待其他器件就绪
 	//NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	RCC_Configuration(); //系统时钟初始化 
 	USART1_Init(115200);
+	printf("core init\r\n");
 
 #ifdef ENABLE_I2C
 #ifdef I2c_Hardware
@@ -265,8 +267,13 @@ int main (void){//主程序
 	
 #ifdef DEBUG_BMP	
 	c = bmp280_init();
+	//printf("bmp280-id: 0x%x\r\n", c);
 	while (1) {
-		printf("id: %4x\r\n", c);
+		bmp280GetData(&pressure, &temperature, &asl);
+		printf("pressure is %f\r\n", pressure);
+		printf("temperature is %f\r\n", temperature);
+		delay_ms(200);
+		//printf("id: %4x\r\n", c);
 	}
 #endif
 
