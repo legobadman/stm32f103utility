@@ -365,7 +365,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F10X_MD</Define>
               <Undefine></Undefine>
-              <IncludePath>.\CMSIS;.\Lib\inc;.\Lib\src;.\User;.\Startup;.\Basic\delay;.\Basic\sys;.\Basic\i2c;.\Hardware\MPU6050;.\Basic\usart;.\Basic\dmp;.\Basic\fbm320;.\Basic\NRF24L01;.\Basic\spi;.\Basic\bmp280;.\Hardware\NRF24L01;.\Hardware\BMP280;.\Hardware\HMC5883L;C:\Keil_v5\ARM\ARMCC\include;.\Hardware\BT;.\Hardware\FBM320;.\Basic\adc</IncludePath>
+              <IncludePath>.\CMSIS;.\Lib\inc;.\Lib\src;.\User;.\Startup;.\Basic\delay;.\Basic\sys;.\Basic\i2c;.\Hardware\MPU6050;.\Basic\usart;.\Basic\dmp;.\Basic\fbm320;.\Basic\NRF24L01;.\Basic\spi;.\Basic\bmp280;.\Hardware\NRF24L01;.\Hardware\BMP280;.\Hardware\HMC5883L;C:\Keil_v5\ARM\ARMCC\include;.\Hardware\BT;.\Hardware\FBM320;.\Basic\adc; \Hardware\Motor</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -577,6 +577,11 @@
               <FileName>fbm320.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Hardware\FBM320\fbm320.c</FilePath>
+            </File>
+            <File>
+              <FileName>Motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\Motor\Motor.c</FilePath>
             </File>
           </Files>
         </Group>

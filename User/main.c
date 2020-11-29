@@ -30,6 +30,7 @@
 #include "nrf24l01.h"
 #include "BT.h"
 #include "adc.h"
+#include "Motor.h"
 
 #define X_ACCEL_OFFSET -15000 
 #define Y_ACCEL_OFFSET -7400 
@@ -38,7 +39,7 @@
 #define Y_GYRO_OFFSET 270
 #define Z_GYRO_OFFSET 144
 
-#define ENABLE_I2C
+//#define ENABLE_I2C
 //#define I2c_Hardware
 extern vu16 ADC_DMA_IN[4];	//摇杆数值存放点
 
@@ -144,7 +145,7 @@ void check_angle(void) {
 //#define NRF_TX
 //#define NRF_RX
 //#define DEBUG_FBM320
-//#define DEBUG_BMP
+//#define DEBUG_MOTOR
 #define DEBUG_REMOTE
 
 uint8_t txbuf[5]={2,2,10,14,25};
@@ -284,6 +285,17 @@ int main (void){//主程序
 	fbm320_init();
 #endif
 
+#ifdef DEBUG_MOTOR
+	MotorInit();
+	while(1) {
+		//GPIO_SetBits(GPIOA, GPIO_Pin_0);
+		//delay_ms(4);
+		//GPIO_ResetBits(GPIOA, GPIO_Pin_0);
+		//delay_ms(20);
+	}
+#endif
+	
+	printf("CrazePony serial port test passed!\r\n");
 #ifdef DEBUG_REMOTE
 	ADC_Configuration();
 	printf("ADC inited\r\n");
