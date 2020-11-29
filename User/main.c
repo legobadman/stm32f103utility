@@ -29,6 +29,7 @@
 #include "HMC5883L.h"
 #include "nrf24l01.h"
 #include "BT.h"
+#include "adc.h"
 
 #define X_ACCEL_OFFSET -15000 
 #define Y_ACCEL_OFFSET -7400 
@@ -39,7 +40,7 @@
 
 #define ENABLE_I2C
 //#define I2c_Hardware
-
+extern vu16 ADC_DMA_IN[4];	//摇杆数值存放点
 
 typedef struct Angle
 {
@@ -135,7 +136,7 @@ void check_angle(void) {
 }
 
 
-#define DEBUG_MPU6050
+//#define DEBUG_MPU6050
 //#define DEBUG_HMC5883
 //#define DEBUG_BT
 //#define DEBUG_BMP
@@ -143,6 +144,8 @@ void check_angle(void) {
 //#define NRF_TX
 //#define NRF_RX
 //#define DEBUG_FBM320
+//#define DEBUG_BMP
+#define DEBUG_REMOTE
 
 uint8_t txbuf[5]={2,2,10,14,25};
 uint8_t rxbuf[5]={0,0,0,0,0};
@@ -281,6 +284,16 @@ int main (void){//主程序
 	fbm320_init();
 #endif
 
+#ifdef DEBUG_REMOTE
+	ADC_Configuration();
+	printf("ADC inited\r\n");
+	while(1) {
+		printf("Left X:%d, Y:%d\r\n", ADC_DMA_IN[0], ADC_DMA_IN[1]);
+		printf("Right X:%d, Y:%d\r\n", ADC_DMA_IN[2], ADC_DMA_IN[3]);
+		printf("\r\n\r\n");
+		delay_ms(200);
+	}
+#endif
 }
 
 /*********************************************************************************************
