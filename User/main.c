@@ -1,20 +1,3 @@
-/*********************************************************************************************
-模板制作：  杜洋工作室/洋桃电子
-程序名：	MPU6050原始数据显示程序
-编写人：	杜洋	
-编写时间：	2018年7月6日
-硬件支持：	洋桃1号开发板 STM32F103C8 外部晶振8MHz RCC函数设置主频72MHz　  
-
-修改日志：　　
-1-	
-	
-							
-说明：
- # 本程序是在洋桃1号开发板的硬件基础上编写的，移植需了解硬件接口差异。
- # 本模板加载了STM32F103内部的RCC时钟设置，并加入了利用滴答定时器的延时函数。
- # 可根据自己的需要增加或删减。
-
-*********************************************************************************************/
 #include "stm32f10x.h" //STM32头文件
 #include "sys.h"
 #include "delay.h"
@@ -143,13 +126,11 @@ void check_angle(void) {
 //#define DEBUG_HMC5883
 //#define DEBUG_BT
 //#define DEBUG_BMP
-//#define DEBUG_NRF24L01
-//#define NRF_TX
-//#define NRF_RX
+#define DEBUG_NRF24L01
 //#define DEBUG_FBM320
 //#define DEBUG_MOTOR
 //#define DEBUG_REMOTE
-#define DEBUG_PWM
+//#define DEBUG_PWM
 
 uint8_t txbuf[5]={2,2,10,14,25};
 uint8_t rxbuf[5]={0,0,0,0,0};
@@ -192,9 +173,7 @@ int main (void){//主程序
 	{
 		printf("nrf24l01 01 failed!\r\n");
 	}
-#endif
-
-#ifdef NRF_TX
+	
 	NRF24L01_TX_Mode();
 	while(1)
 	{
@@ -216,27 +195,6 @@ int main (void){//主程序
 			printf("ret != TX_OK\r\n");
 		}
 		delay_ms(500);
-	}
-#endif
-
-#ifdef NRF_RX
-	NRF24L01_RX_Mode();
-	while(1)
-	{
-		ret = NRF24L01_RX_Packet(rxbuf);
-		if (ret == 0)
-		{
-			for(i=0;i<5;i++)
-			{
-				printf("nrf recieve data is %d \r\n",rxbuf[i]);
-			}
-			printf("nrf recieves data sucessed!\r\n");
-		}
-		else
-		{
-			printf("something wrong\r\n");
-		}
-		delay_ms(500);	 //延时300ms
 	}
 #endif
 
@@ -312,8 +270,10 @@ int main (void){//主程序
 	
 #ifdef DEBUG_PWM
 
-	TIM3_PWM_Init(59999, 23);
-	TIM_SetCompare3(TIM3, 1500);	//3指的是通道
+	TIM2_PWM_Init(59999, 23);	//设置频率为50Hz，公式为：溢出时间Tout（单位秒）=(arr+1) (psc+1) / Tclk
+								//20MS = (59999+1)*(23+1) / 72000000
+								//确定了PWM周期为20ms (50Hz)，设置自动装载
+	TIM_SetCompare1(TIM2, 59999);	//1指的是通道
 	while(1) {
 		
 	}
@@ -321,33 +281,3 @@ int main (void){//主程序
 	
 	
 }
-
-/*********************************************************************************************
- * 杜洋工作室 www.DoYoung.net
- * 洋桃电子 www.DoYoung.net/YT 
-*********************************************************************************************/
-/*
-
-【变量定义】
-u32     a; //定义32位无符号变量a
-u16     a; //定义16位无符号变量a
-u8     a; //定义8位无符号变量a
-vu32     a; //定义易变的32位无符号变量a
-vu16     a; //定义易变的 16位无符号变量a
-vu8     a; //定义易变的 8位无符号变量a
-uc32     a; //定义只读的32位无符号变量a
-uc16     a; //定义只读 的16位无符号变量a
-uc8     a; //定义只读 的8位无符号变量a
-
-#define ONE  1   //宏定义
-
-delay_us(1); //延时1微秒
-delay_ms(1); //延时1毫秒
-delay_s(1); //延时1秒
-
-GPIO_WriteBit(LEDPORT,LED1,(BitAction)(1)); //LED控制
-
-*/
-
-
-

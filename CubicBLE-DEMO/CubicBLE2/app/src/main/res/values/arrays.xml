@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sendTime">
+        <item>0.1s</item>
+        <item>0.6s</item>
+        <item>0.7s</item>
+        <item>0.8s</item>
+        <item>0.9s</item>
+        <item>1.0s</item>
+        <item>2.0s</item>
+        <item>3.0s</item>
+        <item>4.0s</item>
+        <item>5.0s</item>
+        <item>6.0s</item>
+        <item>7.0s</item>
+        <item>8.0s</item>
+        <item>9.0s</item>
+        <item>10.0s</item>
+    </string-array>
+</resources>

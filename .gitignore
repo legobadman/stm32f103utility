@@ -3,6 +3,10 @@
 /*.o
 /*.__i
 /*.lst
+/*.map
+/*.uvopt
+/*.uvoptx
+MyDrone.uvguix.luzh
 /YT32B1_STM32F103_demo.uvguix.Ada51
 /DebugConfig
 /Output

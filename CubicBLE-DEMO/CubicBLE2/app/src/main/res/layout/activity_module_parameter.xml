@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="5dp"
+    android:background="@color/bgColor"
+    android:orientation="vertical" >
+
+    <include layout="@layout/navigation_relativelayout" />
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                style="@style/module_layout"
+                android:background="@drawable/set_item_normal_bg"
+                android:focusable="true"
+                android:focusableInTouchMode="true" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="4" >
+
+                    <TextView
+                        style="@style/module_txt"
+                        android:layout_weight="1"
+                        android:text="@string/Parameter_DeviceName" />
+
+                    <TextView
+                        android:id="@+id/FF91Txt"
+                        style="@style/module_txt"
+                        android:layout_weight="3" />
+
+                    <Button
+                        android:id="@+id/refreshFF91NameBtn"
+                        style="@style/module_Btn"
+                        android:layout_width="wrap_content"
+                        android:layout_marginLeft="2sp"
+                        android:onClick="readFF91"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="@string/Parameter_Refresh"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="4" >
+
+                    <TextView
+                        style="@style/module_txt"
+                        android:layout_weight="1"
+                        android:text="@string/Parameter_SettingName" />
+
+                    <EditText
+                        android:id="@+id/FF91Edit"
+                        style="@style/module_Edit"
+                        android:layout_weight="3"
+                        android:hint="16byte" />
+
+                    <Button
+                        android:id="@+id/resetFF91NameBtn"
+                        style="@style/module_Btn"
+                        android:layout_marginLeft="2dp"
+                        android:onClick="writeFF91"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="@string/setting"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/FF92Layout"
+                style="@style/module_layout" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="4" >
+
+                    <TextView
+                        style="@style/module_txt"
+                        android:layout_weight="1"
+                        android:text="@string/Parameter_ConnectionInterval" />
+
+                    <TextView
+                        android:id="@+id/FF92Txt"
+                        style="@style/module_txt"
+                        android:layout_weight="3" />
+
+                    <Button
+                        android:id="@+id/refreshFF92NameBtn"
+                        style="@style/module_Btn"
+                        android:layout_weight="1"
+                        android:onClick="readFF92"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="@string/Parameter_Refresh"
+                        android:textSize="16dp" />
+
+                    <ImageView
+                        android:id="@+id/arror_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:src="@drawable/arror_item_click" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/FF93Layout"
+                style="@style/module_layout" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="4" >
+
+                    <TextView
+                        style="@style/module_txt"
+                        android:layout_weight="1"
+                        android:text="@string/Parameter_BaudRateOfSerial" />
+
+                    <TextView
+                        android:id="@+id/FF93Txt"
+                        style="@style/module_txt"
+                        android:layout_weight="3" />
+
+                    <Button
+                        android:id="@+id/refreshFF93NameBtn"
+                        style="@style/module_Btn"
+                        android:layout_weight="1"
+                        android:onClick="readFF93"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="@string/Parameter_Refresh"
+                        android:textSize="16dp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:src="@drawable/arror_item_click" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/FF94Layout"
+                style="@style/module_layout" >
+
+                <TextView
+                    style="@style/module_txt"
+                    android:layout_gravity="left"
+                    android:text="@string/The_remote_reset_control"
+                    android:textColor="#008B00"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="4" >
+
+                    <TextView
+                        style="@style/module_txt"
+                        android:layout_weight="1"
+                        android:text="@string/Parameter_RemoteResetRecover" />
+
+                    <TextView
+                        android:id="@+id/FF94Txt"
+                        style="@style/module_txt"
+                        android:layout_weight="3" />
+
+                    <ImageView
+                        android:id="@+id/arror_image1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/arror_item_click" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/FF95Layout"
+                style="@style/module_layout" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="4" >
+
+                    <TextView
+                        style="@style/module_txt"
+                        android:layout_weight="1"
+                        android:text="@string/Parameter_SetBroadcastCycle" />
+
+                    <TextView
+                        android:id="@+id/FF95Txt"
+                        style="@style/module_txt"
+                        android:layout_weight="3" />
+
+                    <Button
+                        android:id="@+id/refreshFF95NameBtn"
+                        style="@style/module_Btn"
+                        android:layout_weight="1"
+                        android:onClick="readFF95"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="@string/refresh"
+                        android:textSize="16dp" />
+
+                    <ImageView
+                        android:id="@+id/arror_image2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:src="@drawable/arror_item_click" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/module_layout"
+                android:background="@drawable/set_item_normal_bg" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="4" >
+
+                    <TextView
+                        style="@style/module_txt"
+                        android:layout_weight="1"
+                        android:text="@string/Parameter_ProductID" />
+
+                    <TextView
+                        android:id="@+id/FF96Txt"
+                        style="@style/module_txt"
+                        android:layout_weight="3" />
+
+                    <Button
+                        android:id="@+id/refreshFF96NameBtn"
+                        style="@style/module_Btn"
+                        android:layout_weight="1"
+                        android:onClick="readFF96"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="@string/refresh"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="4" >
+
+                    <TextView
+                        style="@style/module_txt"
+                        android:layout_weight="1"
+                        android:text="@string/Parameter_SetID" />
+
+                    <EditText
+                        android:id="@+id/FF96Edit"
+                        style="@style/module_Edit"
+                        android:layout_weight="3"
+                        android:hint="2byte"
+                        android:inputType="number"
+                        android:lines="1"
+                        android:maxEms="2"
+                        android:maxLines="1" />
+
+                    <Button
+                        android:id="@+id/FF96Btn"
+                        style="@style/module_Btn"
+                        android:onClick="writeFF96"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="@string/setting"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/FF97Layout"
+                style="@style/module_layout" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="4" >
+
+                    <TextView
+                        style="@style/module_txt"
+                        android:layout_weight="1"
+                        android:text="@string/Parameter_SettingTransmitPower" />
+
+                    <TextView
+                        android:id="@+id/FF97Txt"
+                        style="@style/module_txt"
+                        android:layout_weight="3" />
+
+                    <Button
+                        android:id="@+id/refreshFF97NameBtn"
+                        style="@style/module_Btn"
+                        android:layout_weight="1"
+                        android:onClick="readFF97"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="@string/refresh"
+                        android:textSize="16dp" />
+
+                    <ImageView
+                        android:id="@+id/arror_image3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:src="@drawable/arror_item_click" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/FF98Layout"
+                style="@style/module_layout" >
+
+                <TextView
+                    style="@style/module_txt"
+                    android:text="@string/custom_broadcast_data"
+                    android:textColor="#008B00"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="4" >
+
+                    <TextView
+                        style="@style/module_txt"
+                        android:layout_weight="1"
+                        android:text="@string/Parameter_BroadcastContent" />
+
+                    <TextView
+                        android:id="@+id/FF98Txt"
+                        style="@style/module_txt"
+                        android:layout_weight="3" />
+
+                    <Button
+                        android:id="@+id/refreshFF98NameBtn"
+                        style="@style/module_Btn"
+                        android:layout_weight="1"
+                        android:onClick="readFF98"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="@string/refresh"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="4" >
+
+                    <TextView
+                        style="@style/module_txt"
+                        android:layout_weight="1"
+                        android:text="@string/Parameter_SettingBroadcastContent" />
+
+                    <EditText
+                        android:id="@+id/FF98Edit"
+                        style="@style/module_Edit"
+                        android:layout_weight="3"
+                        android:ems="10"
+                        android:hint="16byte" >
+                    </EditText>
+
+                    <Button
+                        android:id="@+id/FF98Btn"
+                        style="@style/module_Btn"
+                        android:onClick="writeFF98"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="@string/setting"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/FF99Layout"
+                style="@style/module_layout" >
+
+                <TextView
+                    style="@style/module_txt"
+                    android:text="@string/IO_configuration"
+                    android:textColor="#008B00"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="3" >
+
+                    <TextView
+                        style="@style/module_txt"
+                        android:layout_weight="1"
+                        android:text="@string/Parameter_RemoteControlExtensions" />
+
+                    <TextView
+                        android:id="@+id/FF99Txt"
+                        style="@style/module_txt1"
+                        android:layout_weight="2" />
+
+                    <ImageView
+                        android:id="@+id/arror_image4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:src="@drawable/arror_item_click" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/FF9ALayout"
+                style="@style/module_layout"
+                android:layout_marginBottom="10dp" >
+
+                <TextView
+                    style="@style/module_txt"
+                    android:text="@string/Mode_Setting"
+                    android:textColor="#008B00"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="4" >
+
+                    <TextView
+                        style="@style/module_txt"
+                        android:layout_weight="1"
+                        android:text="@string/System_function_switch" />
+
+                    <TextView
+                        android:id="@+id/FF9ATxt"
+                        style="@style/module_txt"
+                        android:layout_weight="3" />
+
+                    <Button
+                        android:id="@+id/refreshFF9ANameBtn"
+                        style="@style/module_Btn"
+                        android:layout_weight="1"
+                        android:onClick="readFF9A"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="@string/refresh"
+                        android:textSize="16dp" />
+
+                    <ImageView
+                        android:id="@+id/arror_image5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:src="@drawable/arror_item_click" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
