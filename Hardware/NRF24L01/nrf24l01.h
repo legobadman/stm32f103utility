@@ -4,15 +4,15 @@
 #include "sys.h"
 
 
-#define NRF_CE	GPIO_Pin_12
-#define NRF_CE_HIGH	GPIO_SetBits(GPIOA,GPIO_Pin_12)
-#define NRF_CE_LOW	GPIO_ResetBits(GPIOA,GPIO_Pin_12)
+#define NRF_CE	GPIO_Pin_15
+#define NRF_CE_HIGH	GPIO_SetBits(GPIOA, NRF_CE)
+#define NRF_CE_LOW	GPIO_ResetBits(GPIOA, NRF_CE)
 
 #define NRF_CS	GPIO_Pin_4 
-#define NRF_CS_HIGH	GPIO_SetBits(GPIOA,GPIO_Pin_4)
-#define NRF_CS_LOW	GPIO_ResetBits(GPIOA,GPIO_Pin_4)
+#define NRF_CS_HIGH	GPIO_SetBits(GPIOA, NRF_CS)
+#define NRF_CS_LOW	GPIO_ResetBits(GPIOA, NRF_CS)
 
-#define NRF_IRQ	GPIO_Pin_15 
+#define NRF_IRQ	GPIO_Pin_11
 #define NRF_IRQ_STATUS	(GPIO_ReadInputDataBit(GPIOA, NRF_IRQ)) //PAin(1)
 
 #define FLASH_CS	GPIO_Pin_2

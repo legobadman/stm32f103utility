@@ -31,6 +31,8 @@
 #include "BT.h"
 #include "adc.h"
 #include "Motor.h"
+#include "pwm.h"
+
 
 #define X_ACCEL_OFFSET -15000 
 #define Y_ACCEL_OFFSET -7400 
@@ -146,7 +148,8 @@ void check_angle(void) {
 //#define NRF_RX
 //#define DEBUG_FBM320
 //#define DEBUG_MOTOR
-#define DEBUG_REMOTE
+//#define DEBUG_REMOTE
+#define DEBUG_PWM
 
 uint8_t txbuf[5]={2,2,10,14,25};
 uint8_t rxbuf[5]={0,0,0,0,0};
@@ -306,6 +309,17 @@ int main (void){//主程序
 		delay_ms(200);
 	}
 #endif
+	
+#ifdef DEBUG_PWM
+
+	TIM3_PWM_Init(59999, 23);
+	TIM_SetCompare3(TIM3, 1500);	//3指的是通道
+	while(1) {
+		
+	}
+#endif	
+	
+	
 }
 
 /*********************************************************************************************
