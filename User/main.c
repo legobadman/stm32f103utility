@@ -24,11 +24,14 @@
 #define Y_GYRO_OFFSET 270
 #define Z_GYRO_OFFSET 144
 
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+
 //#define ENABLE_I2C
 //#define I2c_Hardware
 extern vu16 ADC_DMA_IN[4];	//摇杆数值存放点
 
 bool bLocked = true;
+uint16_t leftX = 0, leftY = 0, RightX = 0, RightY = 0;
 
 typedef struct Angle
 {
@@ -169,9 +172,6 @@ int main (void){//主程序
 #endif
 
 #ifdef DEBUG_NRF24L01
-
-
-	
 #endif
 
 #ifdef DEBUG_MPU6050	
@@ -238,7 +238,7 @@ int main (void){//主程序
 								//20MS = (59999+1)*(23+1) / 72000000
 								//确定了PWM周期为20ms (50Hz)，设置自动装载
 
-	TIM_SetCompare1(TIM2, 0);	//1指的是通道
+	TIM_SetCompare1(TIM2, 1500);	//1指的是通道
 	TIM_SetCompare2(TIM2, 1500);
 	while(1) {
 		
@@ -257,8 +257,10 @@ int main (void){//主程序
 	TIM2_PWM_Init(59999, 23);	//设置频率为50Hz，公式为：溢出时间Tout（单位秒）=(arr+1) (psc+1) / Tclk
 								//20MS = (59999+1)*(23+1) / 72000000
 								//确定了PWM周期为20ms (50Hz)，设置自动装载
-	TIM_SetCompare1(TIM2, 0);	//1指的是通道
-	TIM_SetCompare2(TIM2, 0);
+	TIM_SetCompare1(TIM2, leftX);	//1指的是通道
+	TIM_SetCompare2(TIM2, leftY);
+	TIM_SetCompare3(TIM2, RightX);
+	TIM_SetCompare4(TIM2, RightY);
 
 	while (1)
 	{
@@ -277,20 +279,33 @@ int main (void){//主程序
 			ADC_DMA_IN[3] = rxbuf[7];
 			ADC_DMA_IN[3] = (ADC_DMA_IN[3] << 8) | rxbuf[6];
 
-			printf("Left X:%d, Y:%d\r\n", ADC_DMA_IN[0], ADC_DMA_IN[1]);
-			printf("Right X:%d, Y:%d\r\n", ADC_DMA_IN[2], ADC_DMA_IN[3]);
+			//左边的X轴是向下递增的，因此为了方便日常理解，这里调转过来成为Y轴。
+			leftY = MAX(4000 - ADC_DMA_IN[0], 0);
+			leftX = ADC_DMA_IN[1];
+			RightX = MAX(4000 - ADC_DMA_IN[3], 0);
+			RightY = MAX(4000 - ADC_DMA_IN[2], 0);
+
+			printf("Left X:%d, Y:%d\r\n", leftX, leftY);
+			printf("Right X:%d, Y:%d\r\n", RightX, RightY);
 
 			if (rxbuf[8] == 1)
 			{
-				bLocked = !bLocked;	
+				bLocked = !bLocked;
 			}
+
 			if (bLocked == false)
 			{
-				TIM_SetCompare2(TIM2, 1500);
+				TIM_SetCompare1(TIM2, AcceleratorCurve(leftX));	//1指的是通道
+				TIM_SetCompare2(TIM2, AcceleratorCurve(leftY));
+				TIM_SetCompare3(TIM2, AcceleratorCurve(RightX));
+				TIM_SetCompare4(TIM2, AcceleratorCurve(RightY));
 			}
 			else
 			{
+				TIM_SetCompare1(TIM2, 0);
 				TIM_SetCompare2(TIM2, 0);
+				TIM_SetCompare3(TIM2, 0);
+				TIM_SetCompare4(TIM2, 0);
 			}
 		}
 		else
@@ -299,7 +314,4 @@ int main (void){//主程序
 		}
 		delay_ms(200);	 //延时300ms
 	}
-
-
-	
 }
