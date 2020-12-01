@@ -11,7 +11,7 @@ void TIM2_PWM_Init(u16 arr, u16 psc)
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE); //定时器对应的输出IO端口在PA组。
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
 	
-	gpio.GPIO_Pin = GPIO_Pin_0;	//TIM_CH3, 是固定的，用户不能随意修改，因此无宏定义
+	gpio.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3;	//TIM_CH3, 是固定的，用户不能随意修改，因此无宏定义
 	gpio.GPIO_Mode = GPIO_Mode_AF_PP;	//复用推挽
 	gpio.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &gpio);
@@ -26,8 +26,10 @@ void TIM2_PWM_Init(u16 arr, u16 psc)
 	oc.TIM_OCPolarity = TIM_OCPolarity_High;//设置极性-有效电平为：高电平
 	oc.TIM_OutputState = TIM_OutputState_Enable;	//输出使能
 	TIM_OC1Init(TIM2, &oc);	//OC3指的是通道号3
+	TIM_OC2Init(TIM2, &oc);
 	
 	TIM_OC1PreloadConfig(TIM2, TIM_OCPreload_Enable);
+	TIM_OC2PreloadConfig(TIM2, TIM_OCPreload_Enable);
 	
 	TIM_Cmd(TIM2, ENABLE);
 }

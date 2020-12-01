@@ -28,6 +28,8 @@
 //#define I2c_Hardware
 extern vu16 ADC_DMA_IN[4];	//摇杆数值存放点
 
+bool bLocked = true;
+
 typedef struct Angle
 {
     double X_Angle;
@@ -126,14 +128,14 @@ void check_angle(void) {
 //#define DEBUG_HMC5883
 //#define DEBUG_BT
 //#define DEBUG_BMP
-#define DEBUG_NRF24L01
+//#define DEBUG_NRF24L01
 //#define DEBUG_FBM320
 //#define DEBUG_MOTOR
 //#define DEBUG_REMOTE
 //#define DEBUG_PWM
 
-uint8_t txbuf[5]={2,2,10,14,25};
-uint8_t rxbuf[5]={0,0,0,0,0};
+uint8_t txbuf[5] = {0};
+uint8_t rxbuf[RX_PLOAD_WIDTH] = { 0 };
 
 //#define DEBUG_BMP
 
@@ -147,6 +149,8 @@ int main (void){//主程序
 	//NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	RCC_Configuration(); //系统时钟初始化 
 	USART1_Init(115200);
+	SPI_GPIO_Init();
+	SPI1_Init();
 	printf("core init\r\n");
 
 #ifdef ENABLE_I2C
@@ -165,37 +169,9 @@ int main (void){//主程序
 #endif
 
 #ifdef DEBUG_NRF24L01
-	SPI_GPIO_Init();
-	SPI1_Init();
-	NRF24L01_Init();
-	printf("nrf24l01 start!\r\n");
-	while (NRF24L01_Check())
-	{
-		printf("nrf24l01 01 failed!\r\n");
-	}
+
+
 	
-	NRF24L01_TX_Mode();
-	while(1)
-	{
-		ret = NRF24L01_TX_Packet(txbuf);
-		if (ret == TX_OK)
-		{
-			printf("nrf1 send is sucessed!\r\n");
-			printf("\r\n");
-			for(i=0;i<5;i++)
-			{
-				printf("nrf1 send data is %d \r\n",txbuf[i]);
-			}
-		}
-		else if (ret == MAX_TX)
-		{
-			printf("ret = MAX_TX\r\n");
-		}
-		else {
-			printf("ret != TX_OK\r\n");
-		}
-		delay_ms(500);
-	}
 #endif
 
 #ifdef DEBUG_MPU6050	
@@ -215,7 +191,6 @@ int main (void){//主程序
 		//printf("Pitch is:%f,Roll is:%f,Yaw is:%f\n",Pitch,Roll,Yaw);
 	}
 #endif
-
 	
 #ifdef DEBUG_HMC5883
 	HMC5883L_I2C_Init();
@@ -256,28 +231,75 @@ int main (void){//主程序
 	}
 #endif
 	
-	printf("CrazePony serial port test passed!\r\n");
-#ifdef DEBUG_REMOTE
-	ADC_Configuration();
-	printf("ADC inited\r\n");
-	while(1) {
-		printf("Left X:%d, Y:%d\r\n", ADC_DMA_IN[0], ADC_DMA_IN[1]);
-		printf("Right X:%d, Y:%d\r\n", ADC_DMA_IN[2], ADC_DMA_IN[3]);
-		printf("\r\n\r\n");
-		delay_ms(200);
-	}
-#endif
-	
 #ifdef DEBUG_PWM
 
+	//M1
 	TIM2_PWM_Init(59999, 23);	//设置频率为50Hz，公式为：溢出时间Tout（单位秒）=(arr+1) (psc+1) / Tclk
 								//20MS = (59999+1)*(23+1) / 72000000
 								//确定了PWM周期为20ms (50Hz)，设置自动装载
-	TIM_SetCompare1(TIM2, 59999);	//1指的是通道
+
+	TIM_SetCompare1(TIM2, 0);	//1指的是通道
+	TIM_SetCompare2(TIM2, 1500);
 	while(1) {
 		
 	}
-#endif	
-	
+#endif
+
+	NRF24L01_Init();
+	printf("nrf24l01 start!\r\n");
+	while (NRF24L01_Check())
+	{
+		printf("nrf24l01 01 failed!\r\n");
+	}
+	NRF24L01_RX_Mode();
+
+	//Main
+	TIM2_PWM_Init(59999, 23);	//设置频率为50Hz，公式为：溢出时间Tout（单位秒）=(arr+1) (psc+1) / Tclk
+								//20MS = (59999+1)*(23+1) / 72000000
+								//确定了PWM周期为20ms (50Hz)，设置自动装载
+	TIM_SetCompare1(TIM2, 0);	//1指的是通道
+	TIM_SetCompare2(TIM2, 0);
+
+	while (1)
+	{
+		ret = NRF24L01_RX_Packet(rxbuf);
+		if (ret == 0)
+		{
+			ADC_DMA_IN[0] = rxbuf[1];
+			ADC_DMA_IN[0] = (ADC_DMA_IN[0] << 8) | rxbuf[0];
+
+			ADC_DMA_IN[1] = rxbuf[3];
+			ADC_DMA_IN[1] = (ADC_DMA_IN[1] << 8) | rxbuf[2];
+
+			ADC_DMA_IN[2] = rxbuf[5];
+			ADC_DMA_IN[2] = (ADC_DMA_IN[2] << 8) | rxbuf[4];
+
+			ADC_DMA_IN[3] = rxbuf[7];
+			ADC_DMA_IN[3] = (ADC_DMA_IN[3] << 8) | rxbuf[6];
+
+			printf("Left X:%d, Y:%d\r\n", ADC_DMA_IN[0], ADC_DMA_IN[1]);
+			printf("Right X:%d, Y:%d\r\n", ADC_DMA_IN[2], ADC_DMA_IN[3]);
+
+			if (rxbuf[8] == 1)
+			{
+				bLocked = !bLocked;	
+			}
+			if (bLocked == false)
+			{
+				TIM_SetCompare2(TIM2, 1500);
+			}
+			else
+			{
+				TIM_SetCompare2(TIM2, 0);
+			}
+		}
+		else
+		{
+			printf("something wrong\r\n");
+		}
+		delay_ms(200);	 //延时300ms
+	}
+
+
 	
 }
