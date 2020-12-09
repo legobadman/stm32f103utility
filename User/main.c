@@ -26,8 +26,10 @@
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 
-//#define ENABLE_I2C
-//#define I2c_Hardware
+#define ENABLE_I2C
+#define I2c_Hardware
+#define deg2rad(deg) (0.01745329252*(deg))
+
 extern vu16 ADC_DMA_IN[4];	//摇杆数值存放点
 
 bool bLocked = true;
@@ -40,7 +42,7 @@ typedef struct Angle
     double Z_Angle;   
 } MPU6050_Angle;
 
-
+float Q[4] = {1, 0, 0, 0};
 
 void check_data(void) {
 	int16_t	i, t[6]={0}, n_avg = 3000;
@@ -83,13 +85,42 @@ void zero_correct(int16_t* n) {
 
 void display_data(void) {
   	int16_t	t[6]={0};
+	float wx = 0, wy = 0, wz = 0;
+	float halt_T = 20.0;
+	float yaw = 0.0, pitch = 0.0, roll = 0.0;
+#ifdef I2c_Hardware
 	MPU6050_READ2(t);
+#endif
+	wx = deg2rad(t[3]/16.384);
+	wy = deg2rad(t[4]/16.384);
+	wz = deg2rad(t[5]/16.384);
+	
+	Q[0] = Q[0] + (-wx*Q[1] - wy*Q[2] - wz*Q[3]) * 0.02;
+	Q[1] = Q[1] + (wx*Q[0] + wz*Q[2] - wy*Q[3]) * 0.02;
+	Q[2] = Q[2] + (wy*Q[0] - wz*Q[1] + wx*Q[3]) * 0.02;
+	Q[3] = Q[3] + (wz*Q[0] + wy*Q[1] - wx*Q[2]) * 0.02;
+	
+	yaw = atan2(2*Q[1]*Q[2] + 2*Q[0]*Q[3], -2*Q[2]*Q[2] - 2*Q[3]*Q[3] + 1) * 57.3;
+	pitch = asin(-2*Q[1]*Q[3] + 2*Q[0]*Q[2]) * 57.3;
+	roll = atan2(2*Q[2]*Q[3] + 2*Q[0]*Q[1], -2*Q[1]*Q[1] - 2*Q[2]*Q[2] + 1) * 57.3;
+	
 	//zero_correct(t);
 	//printf("ACCEL_X,Y,Z: %d, %d, %d\r\n", t[0], t[1], t[2]);
 	//printf("GYRO_X,Y,Z: %d, %d, %d\r\n", t[3], t[4], t[5]);
 	//printf("ACCEL_X,Y,Z: %lfg, %lfg, %lfg\r\n", t[0]/16384.0, t[1]/16384.0, t[2]/16384.0);
-	printf("GYRO_X,Y,Z: %lf,%lf,%lf\r\n", t[3]/16.384, t[4]/16.384, t[5]/16.384);
-	delay_ms(10); //延时（决定刷新速度）
+	//printf("GYRO_X,Y,Z: %lf,%lf,%lf\r\n", t[3]/16.384, t[4]/16.384, t[5]/16.384);
+	//printf("q0,q1,q2,q3: %lf,%lf,%lf,%lf\r\n", Q[0], Q[1], Q[2], Q[3]);
+	printf("yaw,pitch,roll: %lf, %lf, %lf\r\n", yaw, pitch, roll);
+	//printf("GYRO_rad_X,Y,Z: %lf,%lf,%lf\r\n", wx, wy, wz);
+	delay_ms(halt_T); //延时（决定刷新速度）
+}
+
+void IMU(void){
+	int16_t	t[6]={0};
+#ifdef I2c_Hardware
+	MPU6050_READ2(t);
+#endif
+	
 }
 
 void to_ground(void) {
@@ -127,7 +158,8 @@ void check_angle(void) {
 }
 
 
-//#define DEBUG_MPU6050
+
+#define DEBUG_MPU6050
 //#define DEBUG_HMC5883
 //#define DEBUG_BT
 //#define DEBUG_BMP
@@ -181,9 +213,9 @@ int main (void){//主程序
 	MPU6050_Init2(); //MPU6050初始化
 #endif
 	while(1) {
-		to_ground();
+		//to_ground();
 		//check_data();
-		//display_data();
+		display_data();
 		//printf("Hello, World.\r\n");
 		//to_ground();
 		//check_angle();
