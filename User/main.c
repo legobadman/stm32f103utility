@@ -15,149 +15,17 @@
 #include "adc.h"
 #include "Motor.h"
 #include "pwm.h"
-
-
-#define X_ACCEL_OFFSET -15000 
-#define Y_ACCEL_OFFSET -7400 
-#define Z_ACCEL_OFFSET (-27000 + 16384)
-#define X_GYRO_OFFSET -53 
-#define Y_GYRO_OFFSET 270
-#define Z_GYRO_OFFSET 144
+#include "dmp.h"
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 
-#define ENABLE_I2C
-#define I2c_Hardware
-#define deg2rad(deg) (0.01745329252*(deg))
+//#define I2c_Hardware
+//#define IMU_SOFTWARE	//软件姿态解算
 
 extern vu16 ADC_DMA_IN[4];	//摇杆数值存放点
 
 bool bLocked = true;
 uint16_t leftX = 0, leftY = 0, RightX = 0, RightY = 0;
-
-typedef struct Angle
-{
-    double X_Angle;
-    double Y_Angle;
-    double Z_Angle;   
-} MPU6050_Angle;
-
-float Q[4] = {1, 0, 0, 0};
-
-void check_data(void) {
-	int16_t	i, t[6]={0}, n_avg = 3000;
-	int avg[6] = {0};
-	for (i = 0; i < n_avg; i++) {
-		MPU6050_READ2(t);	//加速度
-		avg[0] += t[0] + X_ACCEL_OFFSET;
-		avg[1] += t[1] + Y_ACCEL_OFFSET;
-		avg[2] += t[2] + Z_ACCEL_OFFSET;
-		avg[3] += t[3] + X_GYRO_OFFSET;
-		avg[4] += t[4] + Y_GYRO_OFFSET;
-		avg[5] += t[5] + Z_GYRO_OFFSET;
-		//printf("ACCEL_X,T,Z: %d\t,%d\t,%d\t\r\n", t[0], t[1], t[2]);
-		//printf("GYRO_X,T,Z: %d\t,%d\t,%d\t\r\n", t[3], t[4], t[5]);
-		delay_ms(10); //延时（决定刷新速度）
-	}
-	avg[0] /= n_avg;
-	avg[1] /= n_avg;
-	avg[2] /= n_avg;
-	avg[3] /= n_avg;
-	avg[4] /= n_avg;
-	avg[5] /= n_avg;
-	
-	printf("Average GYRO_X,Y,Z: %d, %d, %d\r\n", avg[3], avg[4], avg[5]);
-	printf("Average ACCEL_X,Y,Z: %d, %d, %d\r\n", avg[0], avg[1], avg[2]);
-	
-	while(USART_GetFlagStatus(USART1, USART_FLAG_TC)==RESET); //检查发送中断标志位
-
-	delay_ms(1000); //延时（决定刷新速度）    
-}
-
-void zero_correct(int16_t* n) {
- 	n[0] += X_ACCEL_OFFSET;
-	n[1] += Y_ACCEL_OFFSET;
-	n[2] += Z_ACCEL_OFFSET;
-	n[3] += X_GYRO_OFFSET;
-	n[4] += Y_GYRO_OFFSET;
-	n[5] += Z_GYRO_OFFSET;
-}
-
-void display_data(void) {
-  	int16_t	t[6]={0};
-	float wx = 0, wy = 0, wz = 0;
-	float halt_T = 20.0;
-	float yaw = 0.0, pitch = 0.0, roll = 0.0;
-#ifdef I2c_Hardware
-	MPU6050_READ2(t);
-#endif
-	wx = deg2rad(t[3]/16.384);
-	wy = deg2rad(t[4]/16.384);
-	wz = deg2rad(t[5]/16.384);
-	
-	Q[0] = Q[0] + (-wx*Q[1] - wy*Q[2] - wz*Q[3]) * 0.02;
-	Q[1] = Q[1] + (wx*Q[0] + wz*Q[2] - wy*Q[3]) * 0.02;
-	Q[2] = Q[2] + (wy*Q[0] - wz*Q[1] + wx*Q[3]) * 0.02;
-	Q[3] = Q[3] + (wz*Q[0] + wy*Q[1] - wx*Q[2]) * 0.02;
-	
-	yaw = atan2(2*Q[1]*Q[2] + 2*Q[0]*Q[3], -2*Q[2]*Q[2] - 2*Q[3]*Q[3] + 1) * 57.3;
-	pitch = asin(-2*Q[1]*Q[3] + 2*Q[0]*Q[2]) * 57.3;
-	roll = atan2(2*Q[2]*Q[3] + 2*Q[0]*Q[1], -2*Q[1]*Q[1] - 2*Q[2]*Q[2] + 1) * 57.3;
-	
-	//zero_correct(t);
-	//printf("ACCEL_X,Y,Z: %d, %d, %d\r\n", t[0], t[1], t[2]);
-	//printf("GYRO_X,Y,Z: %d, %d, %d\r\n", t[3], t[4], t[5]);
-	//printf("ACCEL_X,Y,Z: %lfg, %lfg, %lfg\r\n", t[0]/16384.0, t[1]/16384.0, t[2]/16384.0);
-	//printf("GYRO_X,Y,Z: %lf,%lf,%lf\r\n", t[3]/16.384, t[4]/16.384, t[5]/16.384);
-	//printf("q0,q1,q2,q3: %lf,%lf,%lf,%lf\r\n", Q[0], Q[1], Q[2], Q[3]);
-	printf("yaw,pitch,roll: %lf, %lf, %lf\r\n", yaw, pitch, roll);
-	//printf("GYRO_rad_X,Y,Z: %lf,%lf,%lf\r\n", wx, wy, wz);
-	delay_ms(halt_T); //延时（决定刷新速度）
-}
-
-void IMU(void){
-	int16_t	t[6]={0};
-#ifdef I2c_Hardware
-	MPU6050_READ2(t);
-#endif
-	
-}
-
-void to_ground(void) {
-	u16	t[6]={0};
-#ifdef I2c_Hardware
-	MPU6050_READ(t);
-#else
-	MPU6050_READ3(t);
-#endif
-	printf("%d,%d,%d,%d,%d,%d\r\n", t[0], t[1], t[2], t[3], t[4], t[5]);
-	delay_ms(10);
-}
-
-void MPU6050_Get_Angle(MPU6050_Angle* data) {
-	int16_t	t[6]={0};
-	MPU6050_READ2(t);
-	zero_correct(t);
-	data->X_Angle = acos(t[0] / 16384.0);
-	data->Y_Angle = acos(t[1] / 16384.0);
-	data->Z_Angle = acos(t[2] / 16384.0);
-
-	data->X_Angle = data->X_Angle * 57.29577;
-    data->Y_Angle = data->Y_Angle * 57.29577;
-    data->Z_Angle = data->Z_Angle * 57.29577;
-}
-
-void check_angle(void) {
- 	MPU6050_Angle data;
-	MPU6050_Get_Angle(&data);
-	printf("X_Angle = %lf'", data.X_Angle);
-    printf("Y_Angle = %lf'", data.Y_Angle);
-    printf("Z_Angle = %lf'", data.Z_Angle);
-    printf("\r\n");
-	delay_ms(100);
-}
-
-
 
 #define DEBUG_MPU6050
 //#define DEBUG_HMC5883
@@ -188,12 +56,10 @@ int main (void){//主程序
 	SPI1_Init();
 	printf("core init\r\n");
 
-#ifdef ENABLE_I2C
 #ifdef I2c_Hardware
 	I2C_Configuration();//I2C初始化
 #else
 	IIC_Init();
-#endif
 #endif
 
 #ifdef DEBUG_BT	
@@ -206,22 +72,29 @@ int main (void){//主程序
 #ifdef DEBUG_NRF24L01
 #endif
 
-#ifdef DEBUG_MPU6050	
-#ifdef I2c_Hardware
+#ifdef DEBUG_MPU6050
+#ifdef IMU_SOFTWARE
 	MPU6050_Init(); //MPU6050初始化
-#else
-	MPU6050_Init2(); //MPU6050初始化
-#endif
 	while(1) {
-		//to_ground();
+		to_ground();
 		//check_data();
-		display_data();
+		//display_data();
 		//printf("Hello, World.\r\n");
 		//to_ground();
 		//check_angle();
 		//printf("Read_DMP Return is %d\n",Read_DMP(&Pitch,&Roll,&Yaw));
 		//printf("Pitch is:%f,Roll is:%f,Yaw is:%f\n",Pitch,Roll,Yaw);
 	}
+#else
+	MPU6050_DMP_Initialize();     //初始化DMP引擎
+	printf("DMP Inited!!!");
+	while (1) {
+		DMP_Routing();
+		//DMP_getYawPitchRoll();
+		printf("Roll, Pitch, Yaw = %f, %f, %f\r\n", DMP_DATA.dmp_roll, DMP_DATA.dmp_pitch, DMP_DATA.dmp_yaw);
+		delay_ms(50);
+	}
+#endif
 #endif
 	
 #ifdef DEBUG_HMC5883

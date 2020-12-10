@@ -357,16 +357,88 @@
 
 #define MPU6050_WHO_AM_I_BIT        6
 #define MPU6050_WHO_AM_I_LENGTH     6
+
+#define MPU6050_DMP_MEMORY_BANKS        8
+#define MPU6050_DMP_MEMORY_BANK_SIZE    256
+#define MPU6050_DMP_MEMORY_CHUNK_SIZE   16
+
 extern	short gyro[3], accel[3];
 extern int16_t Gx_offset,Gy_offset,Gz_offset;
 extern float Acc1G_Values;
 extern float Pitch,Roll;
 
-
 void MPU6050_Init(void);
-void MPU6050_Init2(void);
 void MPU6050_READ(u16* n);
-void MPU6050_READ2(int16_t* n);
-void MPU6050_READ3(u16* n);
+
+//供外部调用的API
+void MPU6050GyroRead(int16_t* gyroData);
+void MPU6050AccRead(int16_t* accData);
+unsigned char MPU6050_is_DRY(void);
+void MPU6050_reset(void);
+void MPU6050_setSleepEnabled(uint8_t enabled);
+void MPU6050_setMemoryBank(uint8_t bank, uint8_t prefetchEnabled, uint8_t userBank);
+void MPU6050_setMemoryStartAddress(uint8_t address);
+uint8_t MPU6050_readMemoryByte(void);
+int16_t MPU6050_getXGyroOffset(void);
+int16_t MPU6050_getYGyroOffset(void);
+int16_t MPU6050_getZGyroOffset(void);
+uint8_t MPU6050_writeMemoryBlock(const uint8_t* data, uint16_t dataSize, uint8_t bank, uint8_t address, uint8_t verify, uint8_t useProgMem);
+uint8_t MPU6050_writeProgMemoryBlock(const uint8_t* data, uint16_t dataSize, uint8_t bank, uint8_t address, uint8_t verify);
+uint8_t MPU6050_writeProgDMPConfigurationSet(const uint8_t* data, uint16_t dataSize);
+void MPU6050_setIntEnabled(uint8_t enabled);
+void MPU6050_setRate(uint8_t rate);
+void MPU6050_setClockSource(uint8_t source);
+void MPU6050_setDLPFMode(uint8_t mode);
+void MPU6050_setExternalFrameSync(uint8_t sync);
+void MPU6050_setFullScaleGyroRange(uint8_t range);
+void MPU6050_setDMPConfig1(uint8_t config);
+void MPU6050_setDMPConfig2(uint8_t config);
+void MPU6050_setOTPBankValid(uint8_t enabled);
+void MPU6050_setXGyroOffset(int16_t offset);
+void MPU6050_setYGyroOffset(int16_t offset);
+void MPU6050_setZGyroOffset(int16_t offset);
+void MPU6050_resetFIFO(void);
+uint16_t MPU6050_getFIFOCount(void);
+void MPU6050_setMotionDetectionThreshold(uint8_t threshold);
+void MPU6050_setZeroMotionDetectionThreshold(uint8_t threshold);
+void MPU6050_setMotionDetectionDuration(uint8_t duration);
+void MPU6050_setZeroMotionDetectionDuration(uint8_t duration);
+void MPU6050_readMemoryBlock(uint8_t* data, uint16_t dataSize, uint8_t bank, uint8_t address);
+void MPU6050_getFIFOBytes(uint8_t* data, uint8_t length);
+uint8_t MPU6050_getIntStatus(void);
+void MPU6050_setDMPEnabled(uint8_t enabled);
+uint8_t MPU6050_getOTPBankValid(void);
+int8_t MPU6050_getXGyroOffsetTC(void);
+void MPU6050_setXGyroOffsetTC(int8_t offset);
+int8_t MPU6050_getYGyroOffsetTC(void);
+void MPU6050_setYGyroOffsetTC(int8_t offset);
+int8_t MPU6050_getZGyroOffsetTC(void);
+void MPU6050_setZGyroOffsetTC(int8_t offset);
+void MPU6050_setSlaveAddress(uint8_t num, uint8_t address);
+void MPU6050_resetI2CMaster(void);
+void MPU6050_setFIFOEnabled(uint8_t enabled);
+void MPU6050_resetDMP(void);
+void MPU6050_setI2CMasterModeEnabled(uint8_t enabled);
+void MPU6050_setI2CBypassEnabled(uint8_t enabled);
+void MPU6050_Check(void);
+void MPU6050_setGyroOffset(int16_t offset[3]);
+void MPU6050_setAccOffset(int16_t offset[3]);
+
+//自定义的函数，方便分析数据
+
+typedef struct Angle
+{
+	double X_Angle;
+	double Y_Angle;
+	double Z_Angle;
+} MPU6050_Angle;
+
+void check_data(void);
+void zero_correct(int16_t* n);
+void display_data(void);
+void IMU(void);
+void to_ground(void);
+void MPU6050_Get_Angle(MPU6050_Angle* data);
+void check_angle(void);
 
 #endif
