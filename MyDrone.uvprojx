@@ -14,7 +14,7 @@
         <TargetCommonOption>
           <Device>STM32F103T8</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32F1xx_DFP.2.3.0</PackID>
+          <PackID>Keil.STM32F1xx_DFP.1.1.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IROM(0x08000000,0x00010000) IRAM(0x20000000,0x00005000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -365,7 +365,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F10X_MD</Define>
               <Undefine></Undefine>
-              <IncludePath>.\CMSIS;.\Lib\inc;.\Lib\src;.\User;.\Startup;.\Basic\delay;.\Basic\sys;.\Basic\i2c;.\Hardware\MPU6050;.\Basic\usart;.\Basic\dmp;.\Basic\fbm320;.\Basic\NRF24L01;.\Basic\spi;.\Basic\bmp280;.\Hardware\NRF24L01;.\Hardware\BMP280;.\Hardware\HMC5883L;C:\Keil_v5\ARM\ARMCC\include;.\Hardware\BT;.\Hardware\FBM320;.\Basic\adc;.\Hardware\Motor;.\Basic\pwm</IncludePath>
+              <IncludePath>.\CMSIS;.\Lib\inc;.\Lib\src;.\User;.\Startup;.\Basic\delay;.\Basic\sys;.\Basic\i2c;.\Hardware\MPU6050;.\Basic\usart;.\Basic\dmp;.\Basic\fbm320;.\Basic\NRF24L01;.\Basic\spi;.\Basic\bmp280;.\Hardware\NRF24L01;.\Hardware\BMP280;.\Hardware\HMC5883L;C:\Keil_v5\ARM\ARMCC\include;.\Hardware\BT;.\Hardware\FBM320;.\Basic\adc;.\Hardware\Motor;.\Basic\pwm;.\Hardware\MPU6050\DMP;.\Hardware\MPU6050\EXTI;.\Hardware\DMP;.\Hardware;.\Control</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -483,6 +483,11 @@
               <FileType>1</FileType>
               <FilePath>.\Lib\src\stm32f10x_tim.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32f10x_exti.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Lib\src\stm32f10x_exti.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -592,6 +597,31 @@
               <FileName>Motor.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Hardware\Motor\Motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\MPU6050\DMP\inv_mpu.c</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\MPU6050\DMP\inv_mpu_dmp_motion_driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>myexti.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\MPU6050\EXTI\myexti.c</FilePath>
+            </File>
+            <File>
+              <FileName>dmp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\DMP\dmp.c</FilePath>
+            </File>
+            <File>
+              <FileName>control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Control\control.c</FilePath>
             </File>
           </Files>
         </Group>

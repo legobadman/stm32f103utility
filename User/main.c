@@ -15,7 +15,6 @@
 #include "adc.h"
 #include "Motor.h"
 #include "pwm.h"
-//#include "dmp.h"
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 
@@ -28,6 +27,10 @@ bool bLocked = true;
 uint16_t leftX = 0, leftY = 0, RightX = 0, RightY = 0;
 
 #define DEBUG_MPU6050
+#define USE_CRAZEPONY_DMP
+#ifdef USE_CRAZEPONY_DMP
+	#include "dmp.h"
+#endif
 //#define DEBUG_HMC5883
 //#define DEBUG_BT
 //#define DEBUG_BMP
@@ -45,6 +48,7 @@ uint8_t rxbuf[RX_PLOAD_WIDTH] = { 0 };
 int main (void){//主程序
 	int8_t err = -1;
 	uint8_t ret,i;
+	float yaw, yaw_acc_error;
 	bool wtf = false;
 	unsigned char c = 0;
 	float pressure = 0, temperature = 0, asl = 0;
@@ -87,7 +91,7 @@ int main (void){//主程序
 		//printf("Pitch is:%f,Roll is:%f,Yaw is:%f\n",Pitch,Roll,Yaw);
 	}
 #else
-	/*olddmp
+#ifdef USE_CRAZEPONY_DMP
 	MPU6050_DMP_Initialize();     //初始化DMP引擎
 	printf("DMP Inited!!!");
 	while (1) {
@@ -96,14 +100,17 @@ int main (void){//主程序
 		printf("Roll, Pitch, Yaw = %f, %f, %f\r\n", DMP_DATA.dmp_roll, DMP_DATA.dmp_pitch, DMP_DATA.dmp_yaw);
 		delay_ms(50);
 	}
-	*/
+#else
 	MPU6050_Initialize();           //=====MPU6050初始化   
 	DMP_Init();                     //=====初始化DMP 
 	MBOT_EXTI_Init();               //=====MPU6050 5ms定时中断初始化
 	printf("DMP Inited!!!");
 	while (1)
 	{
+		getAngle(&yaw, &yaw_acc_error);
+		printf("Roll, Pitch = %lf, %lf\r\n", Roll, Pitch);
 	}
+#endif
 #endif
 #endif
 	

@@ -156,5 +156,10 @@ void SysTick_Handler(void)
   * @}
   */ 
 
+void EXTI15_10_IRQHandler(void)
+{
+    EXTI_ClearITPendingBit(EXTI_Line12);
+    printf("Here!!!\r\n");
+}
 
 /******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/

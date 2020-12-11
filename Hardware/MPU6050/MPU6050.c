@@ -804,6 +804,7 @@ void MPU6050_Initialize(void)
 	MPU6050_setFullScaleGyroRange(MPU6050_GYRO_FS_2000);//陀螺仪最大量程 +-2000度每秒
 	MPU6050_setFullScaleAccelRange(MPU6050_ACCEL_FS_2);	//加速度度最大量程 +-2G
 	MPU6050_setSleepEnabled(0); //进入工作状态
+    MPU6050_setFIFOEnabled(1);
 	MPU6050_setI2CMasterModeEnabled(0);	 //不让MPU6050 控制AUXI2C
 	MPU6050_setI2CBypassEnabled(0);	 //主控制器的I2C与	MPU6050的AUXI2C
 }
@@ -811,9 +812,9 @@ void MPU6050_Initialize(void)
 void DMP_Init(void)
 {
     u8 temp[1] = { 0 };
-    IICReadBytes(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_WHO_AM_I, 1, temp);
+    IICReadBytes(MPU6050_ADD, MPU6050_RA_WHO_AM_I, 1, temp);
 
-    if (temp[0] != MPU6050_DEFAULT_ADDRESS)
+    if (temp[0] != 0x68)
     {
         NVIC_SystemReset();
     }
@@ -862,15 +863,18 @@ void Read_DMP(void)
     unsigned long sensor_timestamp;
     unsigned char more;
     long quat[4];
+    int ret = 0;
 
-    dmp_read_fifo(gyro, accel, quat, &sensor_timestamp, &sensors, &more);
+    ret = dmp_read_fifo(gyro, accel, quat, &sensor_timestamp, &sensors, &more);
+    printf("ret: %d\r\n", ret);
 	if (sensors & INV_WXYZ_QUAT)
 	{
+        printf("start updating...\r\n");
 		q0 = quat[0] / q30;
 		q1 = quat[1] / q30;
 		q2 = quat[2] / q30;
 		q3 = quat[3] / q30;
-		//Pitch = asin(-2 * q1 * q3 + 2 * q0* q2)* 57.3; 	
+		Pitch = asin(-2 * q1 * q3 + 2 * q0* q2)* 57.3; 	
 		Roll = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2 * q2 + 1) * 57.3; // roll
 		Yaw = atan2(2 * (q1 * q2 + q0 * q3), q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3) * 57.3;//yaw
 	}

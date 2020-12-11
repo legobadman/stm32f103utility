@@ -226,6 +226,31 @@ uint8_t min(uint8_t x, uint8_t y) {
 	else return y;
 }
 
+static void run_self_test(void)
+{
+	int result;
+	long gyro[3], accel[3];
+
+	result = mpu_run_self_test(gyro, accel);
+	if (result == 0x03) {
+		/* Test passed. We can trust the gyro data here, so let's push it down to the DMP*/
+		float sens;
+		unsigned short accel_sens;
+		mpu_get_gyro_sens(&sens);   //读取当前陀螺仪的状态
+		gyro[0] = (long)(gyro[0] * sens);
+		gyro[1] = (long)(gyro[1] * sens);
+		gyro[2] = (long)(gyro[2] * sens);
+		dmp_set_gyro_bias(gyro);    //根据读取的状态进行较准
+
+		mpu_get_accel_sens(&accel_sens);    //读取当前加速度计的状态
+		accel[0] *= accel_sens;
+		accel[1] *= accel_sens;
+		accel[2] *= accel_sens;
+		dmp_set_accel_bias(accel);
+		printf("setting bias succesfully ......\r\n");
+	}
+}
+
 //初始化DMP引擎
 uint8_t MPU6050_DMP_Initialize(void)
 {
@@ -389,6 +414,7 @@ uint8_t MPU6050_DMP_Initialize(void)
 		//printf(("DMP代码校验出错.\r\n"));
 		return 1; // main binary block loading failed
 	}
+	run_self_test();
 	//printf(("======DMP引擎初始化完成========\r\n"));
 	return 0; // success
 }

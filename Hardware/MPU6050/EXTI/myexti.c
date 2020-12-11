@@ -12,12 +12,12 @@ void MBOT_EXTI_Init(void)
 	NVIC_InitTypeDef NVIC_InitStructure;  
 	
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);          //外部中断，需要使能AFIO时钟
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);        //使能GPIO端口时钟
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;	                 //端口配置
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);        //使能GPIO端口时钟
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;	                 //端口配置
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;                //上拉输入
-	GPIO_Init(GPIOA, &GPIO_InitStructure);					     //根据设定参数初始化GPIO
+	GPIO_Init(GPIOB, &GPIO_InitStructure);					     //根据设定参数初始化GPIO
 	
-	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA,GPIO_PinSource12);
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource5);
 	
 	EXTI_InitStructure.EXTI_Line=EXTI_Line12;
 	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;	
