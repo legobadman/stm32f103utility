@@ -3,7 +3,8 @@
 #include "sys.h"
 #include "i2c_hardware.h"
 #include "delay.h"
-
+#include "inv_mpu.h"
+#include "inv_mpu_dmp_motion_driver.h"
 
 #define MPU6050_ADD	0xD0	//器件地址（AD0悬空或低电平时地址是0xD0，为高电平时为0xD2，7位地址：1101 000x）
 #define devAddr  0xD0
@@ -371,6 +372,13 @@ void MPU6050_Init(void);
 void MPU6050_READ(u16* n);
 
 //供外部调用的API
+
+void MPU6050_Initialize(void);
+void DMP_Init(void);
+void Read_DMP(void);
+int Read_Temperature(void);
+void getAngle(float* yaw, float* yaw_acc_error);
+
 void MPU6050GyroRead(int16_t* gyroData);
 void MPU6050AccRead(int16_t* accData);
 unsigned char MPU6050_is_DRY(void);
@@ -390,6 +398,7 @@ void MPU6050_setRate(uint8_t rate);
 void MPU6050_setClockSource(uint8_t source);
 void MPU6050_setDLPFMode(uint8_t mode);
 void MPU6050_setExternalFrameSync(uint8_t sync);
+void MPU6050_setFullScaleAccelRange(uint8_t range);
 void MPU6050_setFullScaleGyroRange(uint8_t range);
 void MPU6050_setDMPConfig1(uint8_t config);
 void MPU6050_setDMPConfig2(uint8_t config);

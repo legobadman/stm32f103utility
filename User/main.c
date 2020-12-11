@@ -15,7 +15,7 @@
 #include "adc.h"
 #include "Motor.h"
 #include "pwm.h"
-#include "dmp.h"
+//#include "dmp.h"
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 
@@ -49,7 +49,7 @@ int main (void){//主程序
 	unsigned char c = 0;
 	float pressure = 0, temperature = 0, asl = 0;
 	delay_ms(500); //上电时等待其他器件就绪
-	//NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	RCC_Configuration(); //系统时钟初始化 
 	USART1_Init(115200);
 	SPI_GPIO_Init();
@@ -73,6 +73,7 @@ int main (void){//主程序
 #endif
 
 #ifdef DEBUG_MPU6050
+
 #ifdef IMU_SOFTWARE
 	MPU6050_Init(); //MPU6050初始化
 	while(1) {
@@ -86,6 +87,7 @@ int main (void){//主程序
 		//printf("Pitch is:%f,Roll is:%f,Yaw is:%f\n",Pitch,Roll,Yaw);
 	}
 #else
+	/*olddmp
 	MPU6050_DMP_Initialize();     //初始化DMP引擎
 	printf("DMP Inited!!!");
 	while (1) {
@@ -93,6 +95,14 @@ int main (void){//主程序
 		//DMP_getYawPitchRoll();
 		printf("Roll, Pitch, Yaw = %f, %f, %f\r\n", DMP_DATA.dmp_roll, DMP_DATA.dmp_pitch, DMP_DATA.dmp_yaw);
 		delay_ms(50);
+	}
+	*/
+	MPU6050_Initialize();           //=====MPU6050初始化   
+	DMP_Init();                     //=====初始化DMP 
+	MBOT_EXTI_Init();               //=====MPU6050 5ms定时中断初始化
+	printf("DMP Inited!!!");
+	while (1)
+	{
 	}
 #endif
 #endif
