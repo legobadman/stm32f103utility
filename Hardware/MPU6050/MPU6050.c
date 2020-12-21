@@ -22,6 +22,7 @@
 #include "usart.h"
 #include "i2c_software.h"
 #include <math.h>
+#include <stdbool.h>
 
 #define PRINT_ACCEL     (0x01)
 #define PRINT_GYRO      (0x02)
@@ -622,12 +623,12 @@ void MPU6050_resetDMP(void) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-#define X_ACCEL_OFFSET -15000 
-#define Y_ACCEL_OFFSET -7400 
-#define Z_ACCEL_OFFSET (-27000 + 16384)
-#define X_GYRO_OFFSET -53 
-#define Y_GYRO_OFFSET 270
-#define Z_GYRO_OFFSET 144
+#define X_ACCEL_OFFSET 250 
+#define Y_ACCEL_OFFSET 160 
+#define Z_ACCEL_OFFSET (-6885 + 8192 + 60)
+#define X_GYRO_OFFSET 36 
+#define Y_GYRO_OFFSET -40
+#define Z_GYRO_OFFSET 51
 #define deg2rad(deg) (0.01745329252*(deg))
 
 float Q[4] = { 1, 0, 0, 0 };
@@ -672,6 +673,38 @@ void zero_correct(int16_t* n) {
 	n[5] += Z_GYRO_OFFSET;
 }
 
+void unit_transfer(int16_t* n) {
+
+}
+
+enum PROCESS_TYPE
+{
+	ORIGNAL,	//原始数据
+	SCALE,		//除以量程
+	ZERO_PADDING,
+	ZERO_PADDING2, //减去偏移并且除以量程
+};
+
+static void message(int type, u16 t[])
+{
+	if (type == ORIGNAL) {
+		printf("%d,%d,%d,%d,%d,%d\r\n", (vs16)t[0], (vs16)t[1], (vs16)t[2], (vs16)t[3], (vs16)t[4], (vs16)t[5]);
+	} else if (type == SCALE) {
+		printf("%lf,%lf,%lf,%lf,%lf,%lf\r\n", (vs16)t[0]/8192.0f, (vs16)t[1]/8192.0f, (vs16)t[2]/8192.0f, (vs16)t[3]/16.384f, (vs16)t[4]/16.384f, (vs16)t[5]/16.384f);
+	} else if (type == ZERO_PADDING) {
+		printf("%d,%d,%d,%d,%d,%d\r\n", (vs16)t[0] + X_ACCEL_OFFSET, (vs16)t[1] + Y_ACCEL_OFFSET, (vs16)t[2]+Z_ACCEL_OFFSET, 
+			(vs16)t[3] + X_GYRO_OFFSET, (vs16)t[4] + Y_GYRO_OFFSET, (vs16)t[5] + Z_GYRO_OFFSET);
+	} else if (type == ZERO_PADDING2) {
+		printf("%lf,%lf,%lf,%lf,%lf,%lf\r\n", 
+				((vs16)t[0] + X_ACCEL_OFFSET) / 8192.0f,
+				((vs16)t[1] + Y_ACCEL_OFFSET) / 8192.0f,
+				((vs16)t[2] + Z_ACCEL_OFFSET) / 8192.0f,
+				((vs16)t[3] + X_GYRO_OFFSET) / 16.384f,
+				((vs16)t[4] + Y_GYRO_OFFSET) / 16.384f,
+				((vs16)t[5] + Z_GYRO_OFFSET) / 16.384f);
+	}
+}
+
 void display_data(void) {
 	u16 t[6] = { 0 };
 	float wx = 0, wy = 0, wz = 0;
@@ -710,21 +743,80 @@ void IMU(void) {
 void to_ground(void) {
 	u16	t[6] = { 0 };
 	MPU6050_READ(t);
-	printf("%d,%d,%d,%d,%d,%d\r\n", t[0], t[1], t[2], t[3], t[4], t[5]);
+	message(ZERO_PADDING, t);
 	delay_ms(10);
 }
+
+void Accel_GetAngle(void) {
+	u16	t[6] = { 0 };
+    float roll = 0, pitch = 0;
+	MPU6050_READ(t);
+    zero_correct(t);
+    roll = atan((float)t[1] / t[2]) * 57.2957;
+    pitch = asin(-(s16)t[0] / 8192.0f) * 57.2957;
+    printf("roll = %lf\tpitch = %lf\r\n", roll, pitch);
+    delay_ms(20);
+}
+
+static float roll_t = 0, pitch_t = 0;
+
+void Gyro_GetAngle(void) {
+    static bool inited = false;
+    static float haltT = 0.001, wx = 0, wy = 0;
+    int i = 0;
+    u16	t[6] = { 0 };
+    if (inited == false) {
+        for (i = 0; i < 100; i++)
+        {
+			MPU6050_READ(t);
+			zero_correct(t);
+			roll_t = atan((float)t[1] / t[2]) * 57.2957;
+			pitch_t = asin(-(s16)t[0] / 8192.0f) * 57.2957;
+			//printf("%d\t%d\r\n", t[0], t[1]);
+            printf("%lf\t%lf\r\n", roll_t, pitch_t);
+            delay_ms(20);
+        }
+        roll_t = 0;
+        pitch_t = 0;
+        //printf("roll = %lf\tpitch = %lf\r\n", roll_t, pitch_t);
+        inited = true;
+        return;
+    }
+	MPU6050_READ(t);
+	zero_correct(t);
+    wx = (s16)t[3] / 16.384f;
+    wy = (s16)t[4] / 16.384f;
+    //printf("%lf, %lf\r\n", wx, wy);
+    roll_t = roll_t + (wx * haltT) * 57.2957;
+    pitch_t = pitch_t + (wy * haltT) * 57.2957;
+    printf("roll = %lf\tpitch = %lf\r\n", roll_t, pitch_t);
+    delay_ms(20);
+}
+
+
 
 void MPU6050_Get_Angle(MPU6050_Angle* data) {
 	u16	t[6] = { 0 };
 	MPU6050_READ(t);
 	zero_correct(t);
-	data->X_Angle = acos((s16)t[0] / 16384.0);
-	data->Y_Angle = acos((s16)t[1] / 16384.0);
-	data->Z_Angle = acos((s16)t[2] / 16384.0);
+	data->X_Angle = acos((s16)t[0] / 8192.0f);
+	data->Y_Angle = acos((s16)t[1] / 8192.0f);
+	data->Z_Angle = acos((s16)t[2] / 8192.0f);
 
 	data->X_Angle = data->X_Angle * 57.29577;
 	data->Y_Angle = data->Y_Angle * 57.29577;
 	data->Z_Angle = data->Z_Angle * 57.29577;
+}
+
+void to_angle(void)
+{
+	MPU6050_Angle data;
+	MPU6050_Get_Angle(&data);
+	printf("X_Angle = %lf\t", data.X_Angle);
+    printf("Y_Angle = %lf\t", data.Y_Angle);
+    printf("Z_Angle = %lf", data.Z_Angle);
+    printf("\r\n");
+	delay_ms(20);
 }
 
 void check_angle(void) {

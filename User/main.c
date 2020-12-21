@@ -27,6 +27,7 @@ bool bLocked = true;
 uint16_t leftX = 0, leftY = 0, RightX = 0, RightY = 0;
 
 #define DEBUG_MPU6050
+#define IMU_SOFTWARE
 #define USE_CRAZEPONY_DMP
 #ifdef USE_CRAZEPONY_DMP
 	#include "dmp.h"
@@ -52,6 +53,7 @@ int main (void){//主程序
 	bool wtf = false;
 	unsigned char c = 0;
 	float pressure = 0, temperature = 0, asl = 0;
+
 	delay_ms(500); //上电时等待其他器件就绪
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	RCC_Configuration(); //系统时钟初始化 
@@ -81,7 +83,10 @@ int main (void){//主程序
 #ifdef IMU_SOFTWARE
 	MPU6050_Init(); //MPU6050初始化
 	while(1) {
-		to_ground();
+		//to_ground();
+		//Accel_GetAngle();
+		Gyro_GetAngle();
+		//to_angle();
 		//check_data();
 		//display_data();
 		//printf("Hello, World.\r\n");

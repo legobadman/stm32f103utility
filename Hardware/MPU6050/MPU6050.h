@@ -444,10 +444,14 @@ typedef struct Angle
 
 void check_data(void);
 void zero_correct(int16_t* n);
+void unit_transfer(int16_t* n);
 void display_data(void);
 void IMU(void);
 void to_ground(void);
+void to_angle(void);
 void MPU6050_Get_Angle(MPU6050_Angle* data);
 void check_angle(void);
+void Accel_GetAngle(void);
+void Gyro_GetAngle(void);
 
 #endif
