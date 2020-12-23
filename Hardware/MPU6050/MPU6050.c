@@ -754,8 +754,8 @@ void Accel_GetAngle(void) {
     zero_correct(t);
     roll = atan((float)t[1] / t[2]) * 57.2957;
     pitch = asin(-(s16)t[0] / 8192.0f) * 57.2957;
-    printf("roll = %lf\tpitch = %lf\r\n", roll, pitch);
-    delay_ms(20);
+	printf("%.2f,%.2f\n", roll, pitch);
+    //delay_ms(20);
 }
 
 static float roll_t = 0, pitch_t = 0;
@@ -773,7 +773,7 @@ void Gyro_GetAngle(void) {
 			roll_t = atan((float)t[1] / t[2]) * 57.2957;
 			pitch_t = asin(-(s16)t[0] / 8192.0f) * 57.2957;
 			//printf("%d\t%d\r\n", t[0], t[1]);
-            printf("%lf\t%lf\r\n", roll_t, pitch_t);
+            //printf("%lf,%lf\r\n", roll_t, pitch_t);
             delay_ms(20);
         }
         roll_t = 0;
@@ -789,7 +789,7 @@ void Gyro_GetAngle(void) {
     //printf("%lf, %lf\r\n", wx, wy);
     roll_t = roll_t + (wx * haltT) * 57.2957;
     pitch_t = pitch_t + (wy * haltT) * 57.2957;
-    printf("roll = %lf\tpitch = %lf\r\n", roll_t, pitch_t);
+    printf("%.2f,%.2f\n", roll_t, pitch_t);
     delay_ms(20);
 }
 
