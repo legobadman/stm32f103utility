@@ -3,8 +3,8 @@
 #include "sys.h"
 #include "i2c_hardware.h"
 #include "delay.h"
-#include "inv_mpu.h"
-#include "inv_mpu_dmp_motion_driver.h"
+#include "DMP/inv_mpu.h"
+#include "DMP/inv_mpu_dmp_motion_driver.h"
 
 #define MPU6050_ADD	0xD0	//器件地址（AD0悬空或低电平时地址是0xD0，为高电平时为0xD2，7位地址：1101 000x）
 #define devAddr  0xD0

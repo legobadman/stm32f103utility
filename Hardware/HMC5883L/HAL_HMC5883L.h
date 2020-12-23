@@ -42,9 +42,6 @@ extern "C" {
  * @addtogroup  HMC5883L_I2C_Define
  * @{
  */
-	
-typedef enum {FALSE = 0, TRUE = !FALSE} bool;
-#include "stdbool.h"
 
 #define HMC5883L_I2C                  I2C1
 #define HMC5883L_I2C_RCC_Periph       RCC_APB1Periph_I2C1

@@ -1,7 +1,19 @@
 #ifndef __SYS_H
 #define __SYS_H	
-#include "stm32f10x.h"	 
-																	    
+#include "stm32f10x.h"
+#include "stm32f10x_gpio.h"
+#include <misc.h>
+#include <stm32f10x_rcc.h>
+#include <stm32f10x_tim.h>
+#include <stm32f10x_adc.h>
+#include <stm32f10x_spi.h>
+#include <stm32f10x_i2c.h>
+#include <stm32f10x_flash.h>
+#include <stm32f10x_bkp.h>
+#include <stm32f10x_rtc.h>
+#include <stm32f10x_usart.h>
+#include <stm32f10x_dma.h>
+#include <stdbool.h>
 	 
 //位带操作,实现51类似的GPIO控制功能
 //具体实现思想,参考<<CM3权威指南>>第五章(87页~92页).

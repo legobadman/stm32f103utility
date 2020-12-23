@@ -37,7 +37,7 @@ extern "C" {
 
 /* Includes */
 #include "HAL_HMC5883L.h"
-
+#include "sys.h"
 #include "stdbool.h"	
 
 #define HMC5883L_ADDRESS            0x1E // this device only has one address

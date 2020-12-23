@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|VisualGDB">
+      <Configuration>Debug</Configuration>
+      <Platform>VisualGDB</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|VisualGDB">
+      <Configuration>Release</Configuration>
+      <Platform>VisualGDB</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{C5DAE0A3-6592-4CF2-B3DA-CDF3712C5A6F}</ProjectGuid>
+    <BSP_ID>com.sysprogs.arm.stm32</BSP_ID>
+    <BSP_VERSION>2020.10</BSP_VERSION>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
+    <GNUConfigurationType>Debug</GNUConfigurationType>
+    <ToolchainID>com.visualgdb.arm-eabi</ToolchainID>
+    <ToolchainVersion>9.3.1/9.2.0/r2</ToolchainVersion>
+    <GenerateHexFile>true</GenerateHexFile>
+    <MCUPropertyListFile>$(ProjectDir)stm32.props</MCUPropertyListFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
+    <ToolchainID>com.visualgdb.arm-eabi</ToolchainID>
+    <ToolchainVersion>9.3.1/9.2.0/r2</ToolchainVersion>
+    <GenerateHexFile>true</GenerateHexFile>
+    <MCUPropertyListFile>$(ProjectDir)stm32.props</MCUPropertyListFile>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>E:\MyDrone\Basic\sys;E:\MyDrone\Basic\delay;E:\MyDrone\Basic\i2c;E:\MyDrone\Basic\usart;E:\MyDrone\Basic\adc;E:\MyDrone\Basic\spi;E:\MyDrone\Basic\pwm;E:\MyDrone\Hardware\BMP280;E:\MyDrone\Basic\rtc;E:\MyDrone\Hardware;E:\MyDrone\Hardware\MPU6050;E:\MyDrone\Hardware\NRF24L01;E:\MyDrone\Hardware\BT;E:\MyDrone\Hardware\Motor;E:\MyDrone\Hardware\DMP;E:\MyDrone\Hardware\HMC5883L;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ItemGroup>
+    <ClCompile Include="Basic\adc\adc.c" />
+    <ClCompile Include="Basic\delay\delay.c" />
+    <ClCompile Include="Basic\i2c\i2c_hardware.c" />
+    <ClCompile Include="Basic\i2c\i2c_software.c" />
+    <ClCompile Include="Basic\pwm\pwm.c" />
+    <ClCompile Include="Basic\rtc\rtc.c" />
+    <ClCompile Include="Basic\spi\spi.c" />
+    <ClCompile Include="Basic\sys\sys.c" />
+    <ClCompile Include="Basic\usart\usart.c" />
+    <ClCompile Include="Control\control.c" />
+    <ClCompile Include="Hardware\BMP280\bmp280.c" />
+    <ClCompile Include="Hardware\BT\BT.c" />
+    <ClCompile Include="Hardware\DMP\dmp.c" />
+    <ClCompile Include="Hardware\HMC5883L\HMC5883L.c" />
+    <ClCompile Include="Hardware\Motor\Motor.c" />
+    <ClCompile Include="Hardware\MPU6050\MPU6050.c" />
+    <ClCompile Include="Hardware\NRF24L01\nrf24l01.c" />
+    <ClCompile Include="system_stm32f10x.c" />
+    <ClCompile Include="User\main.c" />
+    <ClCompile Include="User\stm32f10x_it.c" />
+    <ClInclude Include="Basic\adc\adc.h" />
+    <ClInclude Include="Basic\delay\delay.h" />
+    <ClInclude Include="Basic\i2c\i2c_hardware.h" />
+    <ClInclude Include="Basic\i2c\i2c_software.h" />
+    <ClInclude Include="Basic\pwm\pwm.h" />
+    <ClInclude Include="Basic\rtc\rtc.h" />
+    <ClInclude Include="Basic\spi\spi.h" />
+    <ClInclude Include="Basic\sys\clk.h" />
+    <ClInclude Include="Basic\sys\sys.h" />
+    <ClInclude Include="Basic\usart\usart.h" />
+    <ClInclude Include="Control\control.h" />
+    <ClInclude Include="Hardware\BMP280\bmp280.h" />
+    <ClInclude Include="Hardware\BT\BT.h" />
+    <ClInclude Include="Hardware\config.h" />
+    <ClInclude Include="Hardware\DMP\dmp.h" />
+    <ClInclude Include="Hardware\extern_variable.h" />
+    <ClInclude Include="Hardware\HMC5883L\HAL_HMC5883L.h" />
+    <ClInclude Include="Hardware\HMC5883L\hmc5883l.h" />
+    <ClInclude Include="Hardware\Motor\Motor.h" />
+    <ClInclude Include="Hardware\MPU6050\MPU6050.h" />
+    <ClInclude Include="Hardware\NRF24L01\nrf24l01.h" />
+    <ClInclude Include="User\stm32f10x_conf.h" />
+    <ClInclude Include="User\stm32f10x_it.h" />
+    <None Include="stm32.props" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\StartupFiles\startup_stm32f103xb.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\misc.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_adc.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_bkp.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_can.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_cec.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_crc.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_dac.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_dbgmcu.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_dma.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_exti.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_flash.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_fsmc.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_gpio.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_i2c.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_iwdg.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_pwr.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_rcc.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_rtc.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_sdio.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_spi.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_tim.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_usart.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\src\stm32f10x_wwdg.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\CMSIS_StdPeriph\CM3\CoreSupport\core_cm3.c" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\misc.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_adc.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_bkp.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_can.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_cec.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_crc.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_dac.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_dbgmcu.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_dma.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_exti.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_flash.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_fsmc.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_gpio.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_i2c.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_iwdg.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_pwr.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_rcc.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_rtc.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_sdio.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_spi.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_tim.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_usart.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\STM32F10x_StdPeriph_Driver\inc\stm32f10x_wwdg.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\CMSIS_StdPeriph\CM3\CoreSupport\core_cm3.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\CMSIS_StdPeriph\CM3\DeviceSupport\ST\STM32F10x\stm32f10x.h" />
+    <ClInclude Include="$(BSP_ROOT)\STM32F1xxxx\CMSIS_StdPeriph\CM3\DeviceSupport\ST\STM32F10x\system_stm32f10x.h" />
+    <None Include="MyDrone-Debug.vgdbsettings" />
+    <None Include="MyDrone-Release.vgdbsettings" />
+    <None Include="stm32.xml" />
+    <ClCompile Include="$(EFP_BASE)\Profiler\FastSemihosting.cpp" />
+    <ClCompile Include="$(EFP_BASE)\Profiler\InstrumentingProfiler.cpp" />
+    <ClCompile Include="$(EFP_BASE)\Profiler\TestResourceManager.cpp" />
+    <ClCompile Include="$(EFP_BASE)\Profiler\ProfilerRTOS_FreeRTOS.c" />
+    <ClInclude Include="$(EFP_BASE)\Profiler\SysprogsProfiler.h" />
+    <ClInclude Include="$(EFP_BASE)\Profiler\SmallNumberCoder.h" />
+    <ClInclude Include="$(EFP_BASE)\Profiler\SysprogsProfilerInterface.h" />
+    <ClInclude Include="$(EFP_BASE)\Profiler\ProfilerFreeRTOSHooks.h" />
+    <ClInclude Include="$(EFP_BASE)\Profiler\CustomRealTimeWatches.h" />
+    <ClInclude Include="$(EFP_BASE)\Profiler\DebuggerChecker.h" />
+  </ItemGroup>
+</Project>
