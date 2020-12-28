@@ -42,7 +42,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Basic\sys;$(ProjectDir)\Basic\delay;$(ProjectDir)\Basic\i2c;$(ProjectDir)\Basic\usart;$(ProjectDir)\Basic\adc;$(ProjectDir)\Basic\spi;$(ProjectDir)\Basic\pwm;$(ProjectDir)\Hardware\BMP280;$(ProjectDir)\Basic\rtc;$(ProjectDir)\Hardware;$(ProjectDir)\Hardware\MPU6050;$(ProjectDir)\Hardware\NRF24L01;$(ProjectDir)\Hardware\BT;$(ProjectDir)\Hardware\Motor;$(ProjectDir)\Hardware\DMP;$(ProjectDir)\Hardware\HMC5883L;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Basic\sys;$(ProjectDir)\Basic\delay;$(ProjectDir)\Basic\i2c;$(ProjectDir)\Basic\usart;$(ProjectDir)\Basic\adc;$(ProjectDir)\Basic\spi;$(ProjectDir)\Basic\pwm;$(ProjectDir)\Hardware\BMP280;$(ProjectDir)\Basic\rtc;$(ProjectDir)\Hardware;$(ProjectDir)\Hardware\MPU6050;$(ProjectDir)\Hardware\NRF24L01;$(ProjectDir)\Hardware\BT;$(ProjectDir)\Hardware\Motor;$(ProjectDir)\Hardware\DMP;$(ProjectDir)\Hardware\HMC5883L;$(ProjectDir)\Hardware\MPU6050\DMP;$(ProjectDir)\Hardware\MPU6050\EXTI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -370,6 +370,7 @@ extern float Pitch,Roll;
 
 void MPU6050_Init(void);
 void MPU6050_READ(u16* n);
+void MPU6050_READ2(s16* n);
 
 //供外部调用的API
 

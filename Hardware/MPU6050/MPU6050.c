@@ -35,6 +35,10 @@
 #define FLASH_SIZE      (512)
 #define FLASH_MEM_START ((void*)0x1800)
 #define q30  1073741824.0f
+
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
+
 short gyro[3], accel[3], sensors;
 static signed char gyro_orientation[9] = { -1, 0, 0,
 										   0,-1, 0,
@@ -86,6 +90,20 @@ void MPU6050_READ(u16* n){ //读出X、Y、Z三轴加速度/陀螺仪原始数据 //n[0]是AX，n[
       n[i]=((t[2*i] << 8) + t[2*i+1]);
     for(i=4; i<7; i++)	//整合陀螺仪
       n[i-1]=((t[2*i] << 8) + t[2*i+1]);        
+}
+
+void MPU6050_READ2(s16* n) {
+	u8 i;
+	u8 t[14];
+#ifdef I2c_Hardware
+	I2C_READ_BUFFER(MPU6050_ADD, MPU6050_RA_ACCEL_XOUT_H, t, 14); //读出连续的数据地址，包括了加速度和陀螺仪共12字节
+#else
+	IICReadBytes(MPU6050_ADD, MPU6050_RA_ACCEL_XOUT_H, 14, t);
+#endif
+	for (i = 0; i < 3; i++) 	//整合加速度
+		n[i] = ((t[2 * i] << 8) + t[2 * i + 1]);
+	for (i = 4; i < 7; i++)	//整合陀螺仪
+		n[i - 1] = ((t[2 * i] << 8) + t[2 * i + 1]);
 }
 
 uint8_t buffer[14];
@@ -791,12 +809,14 @@ void to_ground(void) {
 }
 
 void Accel_GetAngle(void) {
-	u16	t[6] = { 0 };
+	s16	t[6] = { 0 };
     float roll = 0, pitch = 0;
-	MPU6050_READ(t);
+	MPU6050_READ2(t);
     zero_correct(t);
-	roll = acos(sqrt(t[0]*t[0] + t[2]*t[2]) / 8192.0f) * 57.2957;
-	pitch = acos(sqrt(t[1]*t[1] + t[2]*t[2]) / 8192.0f) * 57.2957;
+    roll = sqrt(t[0] * t[0] + t[2] * t[2]) / 8192.0f;
+    pitch = sqrt(t[1] * t[1] + t[2] * t[2]) / 8192.0f;
+	roll = acos(MAX(-1, MIN(1,roll))) * 57.2957;
+	pitch = acos(MAX(-1, MIN(1, pitch))) * 57.2957;
 	
     //roll = atan((float)t[1] / t[2]) * 57.2957;
     //pitch = asin(-(s16)t[0] / 8192.0f) * 57.2957;
