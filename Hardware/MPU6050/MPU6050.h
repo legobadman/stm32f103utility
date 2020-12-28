@@ -443,6 +443,7 @@ typedef struct Angle
 } MPU6050_Angle;
 
 void check_data(void);
+void zero_padding(int n);
 void zero_correct(int16_t* n);
 void unit_transfer(int16_t* n);
 void display_data(void);

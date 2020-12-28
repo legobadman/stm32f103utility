@@ -42,7 +42,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>E:\MyDrone\Basic\sys;E:\MyDrone\Basic\delay;E:\MyDrone\Basic\i2c;E:\MyDrone\Basic\usart;E:\MyDrone\Basic\adc;E:\MyDrone\Basic\spi;E:\MyDrone\Basic\pwm;E:\MyDrone\Hardware\BMP280;E:\MyDrone\Basic\rtc;E:\MyDrone\Hardware;E:\MyDrone\Hardware\MPU6050;E:\MyDrone\Hardware\NRF24L01;E:\MyDrone\Hardware\BT;E:\MyDrone\Hardware\Motor;E:\MyDrone\Hardware\DMP;E:\MyDrone\Hardware\HMC5883L;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Basic\sys;$(ProjectDir)\Basic\delay;$(ProjectDir)\Basic\i2c;$(ProjectDir)\Basic\usart;$(ProjectDir)\Basic\adc;$(ProjectDir)\Basic\spi;$(ProjectDir)\Basic\pwm;$(ProjectDir)\Hardware\BMP280;$(ProjectDir)\Basic\rtc;$(ProjectDir)\Hardware;$(ProjectDir)\Hardware\MPU6050;$(ProjectDir)\Hardware\NRF24L01;$(ProjectDir)\Hardware\BT;$(ProjectDir)\Hardware\Motor;$(ProjectDir)\Hardware\DMP;$(ProjectDir)\Hardware\HMC5883L;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

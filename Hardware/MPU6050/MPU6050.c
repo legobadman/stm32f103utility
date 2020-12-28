@@ -41,6 +41,13 @@ static signed char gyro_orientation[9] = { -1, 0, 0,
 										   0, 0, 1 };
 float Pitch, Roll, Yaw;
 float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;
+static int x_a_offset = 0;
+static int y_a_offset = 0;
+static int z_a_offset = 0;
+static int x_g_offset = 0;
+static int y_g_offset = 0;
+static int z_g_offset = 0;
+										   
 
 void MPU6050_Init(void){  //初始化MPU6050
 #ifdef I2c_Hardware
@@ -623,15 +630,51 @@ void MPU6050_resetDMP(void) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-#define X_ACCEL_OFFSET 250 
-#define Y_ACCEL_OFFSET 160 
-#define Z_ACCEL_OFFSET (-6885 + 8192 + 60)
-#define X_GYRO_OFFSET 36 
-#define Y_GYRO_OFFSET -40
-#define Z_GYRO_OFFSET 51
+#define X_ACCEL_OFFSET 243 
+#define Y_ACCEL_OFFSET 125
+#define Z_ACCEL_OFFSET (-9023 + 8192)
+#define X_GYRO_OFFSET 20 
+#define Y_GYRO_OFFSET -27
+#define Z_GYRO_OFFSET -8
 #define deg2rad(deg) (0.01745329252*(deg))
 
 float Q[4] = { 1, 0, 0, 0 };
+
+void zero_padding(int n)
+{
+	int16_t	i;
+	u16 t[6] = { 0 };
+	float avg[6] = { 0 };
+	for (i = 0; i < n; i++) {
+		MPU6050_READ(t); 	//加速度
+		avg[0] += (s16)t[0];
+		avg[1] += (s16)t[1];
+		avg[2] += (s16)t[2];
+		avg[3] += (s16)t[3];
+		avg[4] += (s16)t[4];
+		avg[5] += (s16)t[5];
+		//printf("ACCEL_X,T,Z: %d\t,%d\t,%d\t\r\n", t[0], t[1], t[2]);
+		//printf("GYRO_X,T,Z: %d\t,%d\t,%d\t\r\n", t[3], t[4], t[5]);
+		delay_ms(10);  //延时（决定刷新速度）
+	}
+	avg[0] /= n;
+	avg[1] /= n;
+	avg[2] /= n;
+	avg[3] /= n;
+	avg[4] /= n;
+	avg[5] /= n;
+	x_a_offset = -avg[0];
+	y_a_offset = -avg[1];
+	z_a_offset = -avg[2] + 8192;
+	x_g_offset = -avg[3];
+	y_g_offset = -avg[4];
+	z_g_offset = -avg[5];
+	
+	printf("check padding...");
+	while (0) {
+		to_ground();
+	}
+}
 
 void check_data(void) {
 	int16_t	i, n_avg = 3000;
@@ -639,12 +682,12 @@ void check_data(void) {
 	int avg[6] = { 0 };
 	for (i = 0; i < n_avg; i++) {
 		MPU6050_READ(t);	//加速度
-		avg[0] += (s16)t[0] + X_ACCEL_OFFSET;
-		avg[1] += (s16)t[1] + Y_ACCEL_OFFSET;
-		avg[2] += (s16)t[2] + Z_ACCEL_OFFSET;
-		avg[3] += (s16)t[3] + X_GYRO_OFFSET;
-		avg[4] += (s16)t[4] + Y_GYRO_OFFSET;
-		avg[5] += (s16)t[5] + Z_GYRO_OFFSET;
+		avg[0] += (s16)t[0];
+		avg[1] += (s16)t[1];
+		avg[2] += (s16)t[2];
+		avg[3] += (s16)t[3];
+		avg[4] += (s16)t[4];
+		avg[5] += (s16)t[5];
 		//printf("ACCEL_X,T,Z: %d\t,%d\t,%d\t\r\n", t[0], t[1], t[2]);
 		//printf("GYRO_X,T,Z: %d\t,%d\t,%d\t\r\n", t[3], t[4], t[5]);
 		delay_ms(10); //延时（决定刷新速度）
@@ -665,12 +708,12 @@ void check_data(void) {
 }
 
 void zero_correct(int16_t* n) {
-	n[0] += X_ACCEL_OFFSET;
-	n[1] += Y_ACCEL_OFFSET;
-	n[2] += Z_ACCEL_OFFSET;
-	n[3] += X_GYRO_OFFSET;
-	n[4] += Y_GYRO_OFFSET;
-	n[5] += Z_GYRO_OFFSET;
+	n[0] += x_a_offset;
+	n[1] += y_a_offset;
+	n[2] += z_a_offset;
+	n[3] += x_g_offset;
+	n[4] += y_g_offset;
+	n[5] += z_g_offset;
 }
 
 void unit_transfer(int16_t* n) {
@@ -692,8 +735,8 @@ static void message(int type, u16 t[])
 	} else if (type == SCALE) {
 		printf("%lf,%lf,%lf,%lf,%lf,%lf\r\n", (vs16)t[0]/8192.0f, (vs16)t[1]/8192.0f, (vs16)t[2]/8192.0f, (vs16)t[3]/16.384f, (vs16)t[4]/16.384f, (vs16)t[5]/16.384f);
 	} else if (type == ZERO_PADDING) {
-		printf("%d,%d,%d,%d,%d,%d\r\n", (vs16)t[0] + X_ACCEL_OFFSET, (vs16)t[1] + Y_ACCEL_OFFSET, (vs16)t[2]+Z_ACCEL_OFFSET, 
-			(vs16)t[3] + X_GYRO_OFFSET, (vs16)t[4] + Y_GYRO_OFFSET, (vs16)t[5] + Z_GYRO_OFFSET);
+		printf("%d,%d,%d,%d,%d,%d\r\n", (vs16)t[0] + x_a_offset, (vs16)t[1] + y_a_offset, (vs16)t[2]+z_a_offset, 
+			(vs16)t[3] + x_g_offset, (vs16)t[4] + y_g_offset, (vs16)t[5] + z_g_offset);
 	} else if (type == ZERO_PADDING2) {
 		printf("%lf,%lf,%lf,%lf,%lf,%lf\r\n", 
 				((vs16)t[0] + X_ACCEL_OFFSET) / 8192.0f,
@@ -752,8 +795,11 @@ void Accel_GetAngle(void) {
     float roll = 0, pitch = 0;
 	MPU6050_READ(t);
     zero_correct(t);
-    roll = atan((float)t[1] / t[2]) * 57.2957;
-    pitch = asin(-(s16)t[0] / 8192.0f) * 57.2957;
+	roll = acos(sqrt(t[0]*t[0] + t[2]*t[2]) / 8192.0f) * 57.2957;
+	pitch = acos(sqrt(t[1]*t[1] + t[2]*t[2]) / 8192.0f) * 57.2957;
+	
+    //roll = atan((float)t[1] / t[2]) * 57.2957;
+    //pitch = asin(-(s16)t[0] / 8192.0f) * 57.2957;
 	printf("%.2f,%.2f\n", roll, pitch);
     //delay_ms(20);
 }
@@ -822,11 +868,12 @@ void to_angle(void)
 void check_angle(void) {
 	MPU6050_Angle data;
 	MPU6050_Get_Angle(&data);
-	printf("X_Angle = %lf'", data.X_Angle);
-	printf("Y_Angle = %lf'", data.Y_Angle);
-	printf("Z_Angle = %lf'", data.Z_Angle);
-	printf("\r\n");
-	delay_ms(100);
+	printf("%.2f,%.2f\n", data.X_Angle, data.Y_Angle);
+	//printf("X_Angle = %lf'", data.X_Angle);
+	//printf("Y_Angle = %lf'", data.Y_Angle);
+	//printf("Z_Angle = %lf'", data.Z_Angle);
+	//printf("\r\n");
+	//delay_ms(100);
 }
 
 static  unsigned short inv_row_2_scale(const signed char* row)

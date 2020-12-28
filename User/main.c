@@ -18,7 +18,7 @@
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 
 //#define I2c_Hardware
-//#define IMU_SOFTWARE	//软件姿态解算
+#define IMU_SOFTWARE	//软件姿态解算
 
 extern vu16 ADC_DMA_IN[4];	//摇杆数值存放点
 
@@ -81,10 +81,11 @@ int main (void){//主程序
 
 #ifdef IMU_SOFTWARE
 	MPU6050_Init(); //MPU6050初始化
+	zero_padding(5000);
 	while(1) {
 		//to_ground();
-		//Accel_GetAngle();
-		Gyro_GetAngle();
+		Accel_GetAngle();
+		//Gyro_GetAngle();
 		//to_angle();
 		//check_data();
 		//display_data();
