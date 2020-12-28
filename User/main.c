@@ -102,8 +102,9 @@ int main (void){//主程序
 	while (1) {
 		DMP_Routing();
 		//DMP_getYawPitchRoll();
-		printf("Roll, Pitch, Yaw = %f, %f, %f\r\n", DMP_DATA.dmp_roll, DMP_DATA.dmp_pitch, DMP_DATA.dmp_yaw);
-		delay_ms(50);
+		//printf("Roll, Pitch, Yaw = %f, %f, %f\r\n", DMP_DATA.dmp_roll, DMP_DATA.dmp_pitch, DMP_DATA.dmp_yaw);
+		printf("%f,%f,%f\r\n", DMP_DATA.dmp_roll, DMP_DATA.dmp_pitch, DMP_DATA.dmp_yaw);
+		//delay_ms(20);
 	}
 #else
 	MPU6050_Initialize();           //=====MPU6050初始化   
@@ -120,21 +121,43 @@ int main (void){//主程序
 #endif
 	
 #ifdef DEBUG_HMC5883
-	HMC5883L_I2C_Init();
+	//HMC5883L_I2C_Init();
+	HMC5883L_Init();
 	//HMC5883L_Initialize();
-	wtf = HMC5883L_TestConnection();
+	//wtf = HMC5883L_TestConnection();
 	while (1) {
-		if (wtf) {
-			printf("succeed!\r\n");
-		} else {
-			printf("failed!\r\n");
+		IIC_Start();
+		IIC_Send_Byte(0x3c); // HMC5883L,0x3c,0x03读取这两个地址的寄存器数据，分别为LSB和MSB
+		IIC_Wait_Ack();
+		IIC_Send_Byte(0x03); //
+		IIC_Wait_Ack();
+
+		IIC_Start();
+		IIC_Send_Byte(0x3d); //读数据
+		IIC_Wait_Ack();
+
+		for (i = 0; i < 5; i++)        //第六次不应答
+		{
+			XYZ_Data[i] = IIC_Read_Byte(1);
 		}
+		XYZ_Data[5] = IIC_Read_Byte(0);
+		IIC_Stop();
+		delay_ms(5);
+
+		//if (wtf) {
+		//	printf("succeed!\r\n");
+		//} else {
+		//	printf("failed!\r\n");
+		//}
 	}
 #endif
 	
 #ifdef DEBUG_BMP	
 	c = bmp280_init();
-	//printf("bmp280-id: 0x%x\r\n", c);
+	//while (1)
+	//{
+	//	printf("bmp280-id: %d\r\n", c);
+	//}
 	while (1) {
 		bmp280GetData(&pressure, &temperature, &asl);
 		printf("pressure is %f\r\n", pressure);

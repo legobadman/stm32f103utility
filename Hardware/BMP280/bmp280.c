@@ -41,6 +41,7 @@ unsigned char bmp280_init()
 
 	delay_ms(20);
 	bmp280ID = I2C_ReadOneByte(BMP280_ADDR, BMP280_CHIP_ID);
+	//return bmp280ID;
 	if(bmp280ID == BMP280_DEFAULT_CHIP_ID)
 		printf("BMP280 ID IS: 0x%X\r\n", bmp280ID);
 	else

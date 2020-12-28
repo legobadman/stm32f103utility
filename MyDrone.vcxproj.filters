@@ -46,6 +46,9 @@
     <Filter Include="Header files\Device-specific files\Semihosting/Profiler">
       <UniqueIdentifier>{30ede5ac-3f3d-4737-a906-8551310998d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source files\DMP">
+      <UniqueIdentifier>{fc63e1db-4150-4f1f-90a3-38df190a1560}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="system_stm32f10x.c">
@@ -303,6 +306,12 @@
     <ClCompile Include="Hardware\HMC5883L\HMC5883L.c">
       <Filter>Source files\Hardware</Filter>
     </ClCompile>
+    <ClCompile Include="Hardware\MPU6050\DMP\inv_mpu.c">
+      <Filter>Source files\DMP</Filter>
+    </ClCompile>
+    <ClCompile Include="Hardware\MPU6050\DMP\inv_mpu_dmp_motion_driver.c">
+      <Filter>Source files\DMP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="User\stm32f10x_conf.h">
@@ -373,6 +382,18 @@
     </ClInclude>
     <ClInclude Include="Hardware\HMC5883L\HAL_HMC5883L.h">
       <Filter>Source files\Hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="Hardware\MPU6050\DMP\inv_mpu.h">
+      <Filter>Source files\DMP</Filter>
+    </ClInclude>
+    <ClInclude Include="Hardware\MPU6050\DMP\inv_mpu_dmp_motion_driver.h">
+      <Filter>Source files\DMP</Filter>
+    </ClInclude>
+    <ClInclude Include="Hardware\MPU6050\DMP\dmpKey.h">
+      <Filter>Source files\DMP</Filter>
+    </ClInclude>
+    <ClInclude Include="Hardware\MPU6050\DMP\dmpmap.h">
+      <Filter>Source files\DMP</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@
 #include "MPU6050.h"
 #include "delay.h"
 #include "extern_variable.h"
+#include "inv_mpu.h"
 
 #define M_PI  3.1415926f
 

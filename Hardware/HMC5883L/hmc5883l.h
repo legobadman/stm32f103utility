@@ -104,6 +104,7 @@ extern "C" {
 #define HMC5883L_STATUS_READY_BIT   0
 
 void HMC5883L_Initialize(void);
+void HMC5883L_Init(void);
 bool HMC5883L_TestConnection(void);
 
 // CONFIG_A register

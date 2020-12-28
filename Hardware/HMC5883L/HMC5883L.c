@@ -29,6 +29,7 @@
  */
 #include "HMC5883L.h"
 #include "stm32f10x_i2c.h"
+#include "i2c_software.h"
 #include <stdio.h>
 
 uint8_t HMC5883Lmode;
@@ -63,6 +64,27 @@ void HMC5883L_Initialize(void)
 
     // write MODE register
     HMC5883L_SetMode(HMC5883L_MODE_SINGLE);
+}
+
+void HMC5883L_Init(void)
+{
+	//MPU_IIC_Init();//初始化IIC
+    IIC_Start();
+	IIC_Send_Byte(0x3c);
+
+	IIC_Wait_Ack();
+	IIC_Send_Byte(0x00);
+	IIC_Wait_Ack();
+	IIC_Send_Byte(0x14);//模拟IIC的信号时序
+
+	IIC_Start();
+	IIC_Send_Byte(0x3c); //写指令
+	IIC_Wait_Ack();
+	IIC_Send_Byte(0x01);
+	IIC_Wait_Ack();
+	IIC_Send_Byte(0x20);
+	IIC_Wait_Ack();
+	IIC_Stop();
 }
 
 /** Verify the I2C connection.

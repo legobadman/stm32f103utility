@@ -66,6 +66,8 @@
     <ClCompile Include="Hardware\DMP\dmp.c" />
     <ClCompile Include="Hardware\HMC5883L\HMC5883L.c" />
     <ClCompile Include="Hardware\Motor\Motor.c" />
+    <ClCompile Include="Hardware\MPU6050\DMP\inv_mpu.c" />
+    <ClCompile Include="Hardware\MPU6050\DMP\inv_mpu_dmp_motion_driver.c" />
     <ClCompile Include="Hardware\MPU6050\MPU6050.c" />
     <ClCompile Include="Hardware\NRF24L01\nrf24l01.c" />
     <ClCompile Include="system_stm32f10x.c" />
@@ -90,6 +92,10 @@
     <ClInclude Include="Hardware\HMC5883L\HAL_HMC5883L.h" />
     <ClInclude Include="Hardware\HMC5883L\hmc5883l.h" />
     <ClInclude Include="Hardware\Motor\Motor.h" />
+    <ClInclude Include="Hardware\MPU6050\DMP\dmpKey.h" />
+    <ClInclude Include="Hardware\MPU6050\DMP\dmpmap.h" />
+    <ClInclude Include="Hardware\MPU6050\DMP\inv_mpu.h" />
+    <ClInclude Include="Hardware\MPU6050\DMP\inv_mpu_dmp_motion_driver.h" />
     <ClInclude Include="Hardware\MPU6050\MPU6050.h" />
     <ClInclude Include="Hardware\NRF24L01\nrf24l01.h" />
     <ClInclude Include="User\stm32f10x_conf.h" />
