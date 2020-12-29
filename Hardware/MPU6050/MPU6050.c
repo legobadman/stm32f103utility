@@ -805,22 +805,27 @@ void to_ground(void) {
 	u16	t[6] = { 0 };
 	MPU6050_READ(t);
 	message(ZERO_PADDING, t);
-	delay_ms(10);
+	//delay_ms(10);
 }
+
+#define GET_ROW_PITCH
 
 void Accel_GetAngle(void) {
 	s16	t[6] = { 0 };
-    float roll = 0, pitch = 0;
+    float roll = 0, pitch = 0, X_Angle = 0, Y_Angle = 0;
 	MPU6050_READ2(t);
     zero_correct(t);
-    roll = sqrt(t[0] * t[0] + t[2] * t[2]) / 8192.0f;
-    pitch = sqrt(t[1] * t[1] + t[2] * t[2]) / 8192.0f;
-	roll = acos(MAX(-1, MIN(1,roll))) * 57.2957;
-	pitch = acos(MAX(-1, MIN(1, pitch))) * 57.2957;
-	
-    //roll = atan((float)t[1] / t[2]) * 57.2957;
-    //pitch = asin(-(s16)t[0] / 8192.0f) * 57.2957;
+#ifdef GET_ROW_PITCH
+    roll = atan((float)t[1] / t[2]) * 57.2957;
+    pitch = asin(-(s16)t[0] / 8192.0f) * 57.2957;
 	printf("%.2f,%.2f\n", roll, pitch);
+#else
+    X_Angle = t[0] / 8192.0f;
+    X_Angle = acos(MAX(-1, MIN(1, X_Angle))) * 57.2957;
+    Y_Angle = t[1] / 8192.0f;
+    Y_Angle = acos(MAX(-1, MIN(1, Y_Angle))) * 57.2957;
+    printf("%.2f,%.2f\n", X_Angle, Y_Angle);
+#endif
     //delay_ms(20);
 }
 
