@@ -70,6 +70,7 @@
     <ClCompile Include="Hardware\MPU6050\DMP\inv_mpu_dmp_motion_driver.c" />
     <ClCompile Include="Hardware\MPU6050\MPU6050.c" />
     <ClCompile Include="Hardware\NRF24L01\nrf24l01.c" />
+    <ClCompile Include="Hardware\QMC5883L\qmc5883l.c" />
     <ClCompile Include="system_stm32f10x.c" />
     <ClCompile Include="User\main.c" />
     <ClCompile Include="User\stm32f10x_it.c" />
@@ -98,6 +99,7 @@
     <ClInclude Include="Hardware\MPU6050\DMP\inv_mpu_dmp_motion_driver.h" />
     <ClInclude Include="Hardware\MPU6050\MPU6050.h" />
     <ClInclude Include="Hardware\NRF24L01\nrf24l01.h" />
+    <ClInclude Include="Hardware\QMC5883L\qmc5883l.h" />
     <ClInclude Include="User\stm32f10x_conf.h" />
     <ClInclude Include="User\stm32f10x_it.h" />
     <None Include="stm32.props" />

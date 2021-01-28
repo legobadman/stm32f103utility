@@ -24,19 +24,19 @@ extern vu16 ADC_DMA_IN[4];	//摇杆数值存放点
 bool bLocked = true;
 uint16_t leftX = 0, leftY = 0, RightX = 0, RightY = 0;
 
-#define DEBUG_MPU6050
-#define IMU_SOFTWARE
-#define USE_CRAZEPONY_DMP
-#ifdef USE_CRAZEPONY_DMP
-	#include "dmp.h"
-#endif
+//#define DEBUG_MPU6050
+//#define IMU_SOFTWARE
+//#define USE_CRAZEPONY_DMP
+//#ifdef USE_CRAZEPONY_DMP
+//	#include "dmp.h"
+//#endif
 //#define DEBUG_HMC5883
+//#define DEBUG_QMC5883
 //#define DEBUG_BT
 //#define DEBUG_BMP
 //#define DEBUG_NRF24L01
 //#define DEBUG_FBM320
 //#define DEBUG_MOTOR
-//#define DEBUG_REMOTE
 //#define DEBUG_PWM
 
 uint8_t txbuf[5] = {0};
@@ -59,7 +59,9 @@ int main (void){//主程序
 	SPI_GPIO_Init();
 	SPI1_Init();
 	printf("core init\r\n");
-
+	while (0) {
+		printf("Hello, World23\r\n");
+	}
 #ifdef I2c_Hardware
 	I2C_Configuration();//I2C初始化
 #else
@@ -74,16 +76,40 @@ int main (void){//主程序
 #endif
 
 #ifdef DEBUG_NRF24L01
+	NRF24L01_Init();
+	printf("nrf24l01 start!\r\n");
+	while (NRF24L01_Check())
+	{
+		printf("nrf24l01 01 failed!\r\n");
+	}
+	while(0)
+	{
+		printf("nrf24l01 succeed!\r\n");
+	}
+	
+	NRF24L01_RX_Mode();
+	while(1)
+	{
+		NRF24L01_RX_Packet(rxbuf);
+		ret = NRF24L01_RX_Packet(rxbuf);
+		printf("RX mode ret is %d\r\n",ret);
+		for(i=0;i<RX_PLOAD_WIDTH;i++)
+		{
+			printf("nrf recieve data is %d \r\n",rxbuf[i]);
+		}
+		printf("nrf recieves data sucessed!\r\n");
+		delay_ms(200);
+	}
 #endif
 
 #ifdef DEBUG_MPU6050
 
 #ifdef IMU_SOFTWARE
 	MPU6050_Init(); //MPU6050初始化
-	zero_padding(1000);
+	//zero_padding(1000);
 	while(1) {
-		//to_ground();
-		Accel_GetAngle();
+		to_ground();
+		//Accel_GetAngle();
 		//Gyro_GetAngle();
 		//to_angle();
 		//check_data();
@@ -117,6 +143,10 @@ int main (void){//主程序
 	}
 #endif
 #endif
+#endif
+
+#ifdef DEBUG_QMC5883
+	QMC5883L_Init();
 #endif
 	
 #ifdef DEBUG_HMC5883
@@ -187,8 +217,10 @@ int main (void){//主程序
 								//20MS = (59999+1)*(23+1) / 72000000
 								//确定了PWM周期为20ms (50Hz)，设置自动装载
 
-	TIM_SetCompare1(TIM2, 1500);	//1指的是通道
-	TIM_SetCompare2(TIM2, 1500);
+	TIM_SetCompare1(TIM2, 0);	//1指的是通道
+	TIM_SetCompare2(TIM2, 0);
+	TIM_SetCompare3(TIM2, 0);
+	TIM_SetCompare4(TIM2, 1000);
 	while(1) {
 		
 	}
@@ -200,8 +232,7 @@ int main (void){//主程序
 	{
 		printf("nrf24l01 01 failed!\r\n");
 	}
-	NRF24L01_RX_Mode();
-
+	
 	//Main
 	TIM2_PWM_Init(59999, 23);	//设置频率为50Hz，公式为：溢出时间Tout（单位秒）=(arr+1) (psc+1) / Tclk
 								//20MS = (59999+1)*(23+1) / 72000000
@@ -210,7 +241,10 @@ int main (void){//主程序
 	TIM_SetCompare2(TIM2, leftY);
 	TIM_SetCompare3(TIM2, RightX);
 	TIM_SetCompare4(TIM2, RightY);
-
+	
+	
+	NRF24L01_RX_Mode();
+	
 	while (1)
 	{
 		ret = NRF24L01_RX_Packet(rxbuf);

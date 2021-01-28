@@ -312,6 +312,9 @@
     <ClCompile Include="Hardware\MPU6050\DMP\inv_mpu_dmp_motion_driver.c">
       <Filter>Source files\DMP</Filter>
     </ClCompile>
+    <ClCompile Include="Hardware\QMC5883L\qmc5883l.c">
+      <Filter>Source files\Hardware</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="User\stm32f10x_conf.h">
@@ -394,6 +397,9 @@
     </ClInclude>
     <ClInclude Include="Hardware\MPU6050\DMP\dmpmap.h">
       <Filter>Source files\DMP</Filter>
+    </ClInclude>
+    <ClInclude Include="Hardware\QMC5883L\qmc5883l.h">
+      <Filter>Source files\Hardware</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
