@@ -14,6 +14,7 @@
 #include "adc.h"
 #include "Motor.h"
 #include "pwm.h"
+#include "led.h"
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 
@@ -58,6 +59,9 @@ int main (void){//主程序
 	USART1_Init(115200);
 	SPI_GPIO_Init();
 	SPI1_Init();
+	LED_Init();
+
+	LCKLED_ON
 	printf("core init\r\n");
 	while (0) {
 		printf("Hello, World23\r\n");
@@ -282,6 +286,7 @@ int main (void){//主程序
 				TIM_SetCompare2(TIM2, AcceleratorCurve(leftY));
 				TIM_SetCompare3(TIM2, AcceleratorCurve(RightX));
 				TIM_SetCompare4(TIM2, AcceleratorCurve(RightY));
+				LCKLED_OFF
 			}
 			else
 			{
@@ -289,6 +294,7 @@ int main (void){//主程序
 				TIM_SetCompare2(TIM2, 0);
 				TIM_SetCompare3(TIM2, 0);
 				TIM_SetCompare4(TIM2, 0);
+				LCKLED_ON
 			}
 		}
 		else

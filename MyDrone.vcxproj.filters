@@ -315,6 +315,9 @@
     <ClCompile Include="Hardware\QMC5883L\qmc5883l.c">
       <Filter>Source files\Hardware</Filter>
     </ClCompile>
+    <ClCompile Include="Basic\led\led.c">
+      <Filter>Source files\Basic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="User\stm32f10x_conf.h">
@@ -400,6 +403,9 @@
     </ClInclude>
     <ClInclude Include="Hardware\QMC5883L\qmc5883l.h">
       <Filter>Source files\Hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="Basic\led\led.h">
+      <Filter>Source files\Basic</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

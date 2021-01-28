@@ -42,7 +42,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Basic\sys;$(ProjectDir)\Basic\delay;$(ProjectDir)\Basic\i2c;$(ProjectDir)\Basic\usart;$(ProjectDir)\Basic\adc;$(ProjectDir)\Basic\spi;$(ProjectDir)\Basic\pwm;$(ProjectDir)\Hardware\BMP280;$(ProjectDir)\Basic\rtc;$(ProjectDir)\Hardware;$(ProjectDir)\Hardware\MPU6050;$(ProjectDir)\Hardware\NRF24L01;$(ProjectDir)\Hardware\BT;$(ProjectDir)\Hardware\Motor;$(ProjectDir)\Hardware\DMP;$(ProjectDir)\Hardware\HMC5883L;$(ProjectDir)\Hardware\MPU6050\DMP;$(ProjectDir)\Hardware\MPU6050\EXTI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Basic\sys;$(ProjectDir)\Basic\delay;$(ProjectDir)\Basic\i2c;$(ProjectDir)\Basic\usart;$(ProjectDir)\Basic\adc;$(ProjectDir)\Basic\spi;$(ProjectDir)\Basic\led;$(ProjectDir)\Basic\pwm;$(ProjectDir)\Hardware\BMP280;$(ProjectDir)\Basic\rtc;$(ProjectDir)\Hardware;$(ProjectDir)\Hardware\MPU6050;$(ProjectDir)\Hardware\NRF24L01;$(ProjectDir)\Hardware\BT;$(ProjectDir)\Hardware\Motor;$(ProjectDir)\Hardware\DMP;$(ProjectDir)\Hardware\HMC5883L;$(ProjectDir)\Hardware\MPU6050\DMP;$(ProjectDir)\Hardware\MPU6050\EXTI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -55,6 +55,7 @@
     <ClCompile Include="Basic\delay\delay.c" />
     <ClCompile Include="Basic\i2c\i2c_hardware.c" />
     <ClCompile Include="Basic\i2c\i2c_software.c" />
+    <ClCompile Include="Basic\led\led.c" />
     <ClCompile Include="Basic\pwm\pwm.c" />
     <ClCompile Include="Basic\rtc\rtc.c" />
     <ClCompile Include="Basic\spi\spi.c" />
@@ -78,6 +79,7 @@
     <ClInclude Include="Basic\delay\delay.h" />
     <ClInclude Include="Basic\i2c\i2c_hardware.h" />
     <ClInclude Include="Basic\i2c\i2c_software.h" />
+    <ClInclude Include="Basic\led\led.h" />
     <ClInclude Include="Basic\pwm\pwm.h" />
     <ClInclude Include="Basic\rtc\rtc.h" />
     <ClInclude Include="Basic\spi\spi.h" />
