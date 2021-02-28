@@ -25,8 +25,8 @@ extern vu16 ADC_DMA_IN[4];	//摇杆数值存放点
 bool bLocked = true;
 uint16_t leftX = 0, leftY = 0, RightX = 0, RightY = 0;
 
-//#define DEBUG_MPU6050
-//#define IMU_SOFTWARE
+#define DEBUG_MPU6050
+#define IMU_SOFTWARE
 //#define USE_CRAZEPONY_DMP
 //#ifdef USE_CRAZEPONY_DMP
 //	#include "dmp.h"

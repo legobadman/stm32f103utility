@@ -66,15 +66,15 @@ void MPU6050_Init(void){  //初始化MPU6050
 	I2C_SAND_BYTE(MPU6050_ADD,MPU6050_RA_GYRO_CONFIG,0x18);//陀螺仪自检及测量范围，典型值：0x18(不自检，2000deg/s)
 	I2C_SAND_BYTE(MPU6050_ADD,MPU6050_RA_ACCEL_CONFIG,0x08);//配置加速度传感器工作在4G模式 (四种量程2g，4g，8g，16g，对应的值分别为0x00，0x08，0x10，0x18)
 #else
-	IICwriteByte(MPU6050_ADD, MPU6050_RA_PWR_MGMT_1, 0x80);//解除休眠状态
+	IICWriteByte(MPU6050_ADD, MPU6050_RA_PWR_MGMT_1, 0x80);//解除休眠状态
 	delay_ms(1000);
-	IICwriteByte(MPU6050_ADD, MPU6050_RA_PWR_MGMT_1, 0x00);//解除休眠状态
-	IICwriteByte(MPU6050_ADD, MPU6050_RA_SMPLRT_DIV, 0x07);//陀螺仪采样率
-	IICwriteByte(MPU6050_ADD, MPU6050_RA_CONFIG, 0x06);
-	IICwriteByte(MPU6050_ADD, MPU6050_INTCFG_I2C_BYPASS_EN_BIT, 0x01);
+	IICWriteByte(MPU6050_ADD, MPU6050_RA_PWR_MGMT_1, 0x00);//解除休眠状态
+	IICWriteByte(MPU6050_ADD, MPU6050_RA_SMPLRT_DIV, 0x07);//陀螺仪采样率
+	IICWriteByte(MPU6050_ADD, MPU6050_RA_CONFIG, 0x06);
+	IICWriteByte(MPU6050_ADD, MPU6050_INTCFG_I2C_BYPASS_EN_BIT, 0x01);
 
-	IICwriteByte(MPU6050_ADD, MPU6050_RA_GYRO_CONFIG, 0x18);//陀螺仪自检及测量范围，典型值：0x18(不自检，2000deg/s)
-	IICwriteByte(MPU6050_ADD, MPU6050_RA_ACCEL_CONFIG, 0x08);//配置加速度传感器工作在4G模式 (四种量程2g，4g，8g，16g，对应的值分别为0x00，0x08，0x10，0x18)
+	IICWriteByte(MPU6050_ADD, MPU6050_RA_GYRO_CONFIG, 0x18);//陀螺仪自检及测量范围，典型值：0x18(不自检，2000deg/s)
+	IICWriteByte(MPU6050_ADD, MPU6050_RA_ACCEL_CONFIG, 0x08);//配置加速度传感器工作在4G模式 (四种量程2g，4g，8g，16g，对应的值分别为0x00，0x08，0x10，0x18)
 #endif
 }
 
@@ -233,7 +233,7 @@ void MPU6050_setAccOffset(int16_t offset[3])
     {
         buf[0] = offset[i] >> 8;
         buf[1] = offset[i];
-        IICwriteBytes(devAddr, MPU6050_RA_XA_OFFS_H + i * 2, 2, buf);
+        IICWriteBytes(devAddr, MPU6050_RA_XA_OFFS_H + i * 2, 2, buf);
     }
 }
 
@@ -244,7 +244,7 @@ void MPU6050_setGyroOffset(int16_t offset[3])
     {
         buf[0] = offset[i] >> 8;
         buf[1] = offset[i];
-        IICwriteBytes(devAddr, MPU6050_RA_XG_OFFS_USRH + i * 2, 2, buf);
+        IICWriteBytes(devAddr, MPU6050_RA_XG_OFFS_USRH + i * 2, 2, buf);
     }
 }
 
@@ -255,12 +255,12 @@ void MPU6050_setMemoryBank(uint8_t bank, uint8_t prefetchEnabled, uint8_t userBa
     bank &= 0x1F;
     if (userBank) bank |= 0x20;
     if (prefetchEnabled) bank |= 0x40;
-    IICwriteByte(devAddr, MPU6050_RA_BANK_SEL, bank);
+    IICWriteByte(devAddr, MPU6050_RA_BANK_SEL, bank);
 }
 
 // MEM_START_ADDR register
 void MPU6050_setMemoryStartAddress(uint8_t address) {
-    IICwriteByte(devAddr, MPU6050_RA_MEM_START_ADDR, address);
+    IICWriteByte(devAddr, MPU6050_RA_MEM_START_ADDR, address);
 }
 
 // MEM_R_W register
@@ -307,7 +307,7 @@ uint8_t MPU6050_writeMemoryBlock(const uint8_t* data, uint16_t dataSize, uint8_t
         tprogBuffer = (uint8_t*)data + i;
 
 
-        IICwriteBytes(devAddr, MPU6050_RA_MEM_R_W, chunkSize, tprogBuffer);
+        IICWriteBytes(devAddr, MPU6050_RA_MEM_R_W, chunkSize, tprogBuffer);
 
         // verify data if needed
         if (verify) {
@@ -368,7 +368,7 @@ uint8_t MPU6050_writeDMPConfigurationSet(const uint8_t* data, uint16_t dataSize,
             if (special == 0x01) {
                 // enable DMP-related interrupts
 
-                IICwriteByte(devAddr, MPU6050_RA_INT_ENABLE, 0x32);  // single operation
+                IICWriteByte(devAddr, MPU6050_RA_INT_ENABLE, 0x32);  // single operation
 
                 success = 1;
             }
@@ -402,7 +402,7 @@ uint8_t MPU6050_writeProgDMPConfigurationSet(const uint8_t* data, uint16_t dataS
  * @see MPU6050_INTERRUPT_FF_BIT
  **/
 void MPU6050_setIntEnabled(uint8_t enabled) {
-    IICwriteByte(devAddr, MPU6050_RA_INT_ENABLE, enabled);
+    IICWriteByte(devAddr, MPU6050_RA_INT_ENABLE, enabled);
 }
 
 /** Set gyroscope sample rate divider.
@@ -411,7 +411,7 @@ void MPU6050_setIntEnabled(uint8_t enabled) {
  * @see MPU6050_RA_SMPLRT_DIV
  */
 void MPU6050_setRate(uint8_t rate) {
-    IICwriteByte(devAddr, MPU6050_RA_SMPLRT_DIV, rate);
+    IICWriteByte(devAddr, MPU6050_RA_SMPLRT_DIV, rate);
 }
 
 /** Set digital low-pass filter configuration.
@@ -436,11 +436,11 @@ void MPU6050_setExternalFrameSync(uint8_t sync) {
 }
 
 void MPU6050_setDMPConfig1(uint8_t config) {
-    IICwriteByte(devAddr, MPU6050_RA_DMP_CFG_1, config);
+    IICWriteByte(devAddr, MPU6050_RA_DMP_CFG_1, config);
 }
 
 void MPU6050_setDMPConfig2(uint8_t config) {
-    IICwriteByte(devAddr, MPU6050_RA_DMP_CFG_2, config);
+    IICWriteByte(devAddr, MPU6050_RA_DMP_CFG_2, config);
 }
 
 void MPU6050_setOTPBankValid(uint8_t enabled) {
@@ -451,18 +451,18 @@ void MPU6050_setOTPBankValid(uint8_t enabled) {
 void MPU6050_setXGyroOffset(int16_t offset) {
     buffer[0] = offset >> 8;
     buffer[1] = offset & 0x00ff;
-    IICwriteBytes(devAddr, MPU6050_RA_XG_OFFS_USRH, 2, buffer);
+    IICWriteBytes(devAddr, MPU6050_RA_XG_OFFS_USRH, 2, buffer);
 }
 void MPU6050_setYGyroOffset(int16_t offset) {
     buffer[0] = offset >> 8;
     buffer[1] = offset & 0x00ff;
-    IICwriteBytes(devAddr, MPU6050_RA_YG_OFFS_USRH, 2, buffer);
+    IICWriteBytes(devAddr, MPU6050_RA_YG_OFFS_USRH, 2, buffer);
 }
 
 void MPU6050_setZGyroOffset(int16_t offset) {
     buffer[0] = offset >> 8;
     buffer[1] = offset & 0x00ff;
-    IICwriteBytes(devAddr, MPU6050_RA_ZG_OFFS_USRH, 2, buffer);
+    IICWriteBytes(devAddr, MPU6050_RA_ZG_OFFS_USRH, 2, buffer);
 }
 
 /** Reset the FIFO.
@@ -493,7 +493,7 @@ uint16_t MPU6050_getFIFOCount(void) {
  * @see MPU6050_RA_MOT_THR
  */
 void MPU6050_setMotionDetectionThreshold(uint8_t threshold) {
-    IICwriteByte(devAddr, MPU6050_RA_MOT_THR, threshold);
+    IICWriteByte(devAddr, MPU6050_RA_MOT_THR, threshold);
 }
 
 /** Set zero motion detection event acceleration threshold.
@@ -502,7 +502,7 @@ void MPU6050_setMotionDetectionThreshold(uint8_t threshold) {
  * @see MPU6050_RA_ZRMOT_THR
  */
 void MPU6050_setZeroMotionDetectionThreshold(uint8_t threshold) {
-    IICwriteByte(devAddr, MPU6050_RA_ZRMOT_THR, threshold);
+    IICWriteByte(devAddr, MPU6050_RA_ZRMOT_THR, threshold);
 }
 
 /** Set motion detection event duration threshold.
@@ -511,7 +511,7 @@ void MPU6050_setZeroMotionDetectionThreshold(uint8_t threshold) {
  * @see MPU6050_RA_MOT_DUR
  */
 void MPU6050_setMotionDetectionDuration(uint8_t duration) {
-    IICwriteByte(devAddr, MPU6050_RA_MOT_DUR, duration);
+    IICWriteByte(devAddr, MPU6050_RA_MOT_DUR, duration);
 }
 
 /** Set zero motion detection event duration threshold.
@@ -520,7 +520,7 @@ void MPU6050_setMotionDetectionDuration(uint8_t duration) {
  * @see MPU6050_RA_ZRMOT_DUR
  */
 void MPU6050_setZeroMotionDetectionDuration(uint8_t duration) {
-    IICwriteByte(devAddr, MPU6050_RA_ZRMOT_DUR, duration);
+    IICWriteByte(devAddr, MPU6050_RA_ZRMOT_DUR, duration);
 }
 
 void MPU6050_readMemoryBlock(uint8_t* data, uint16_t dataSize, uint8_t bank, uint8_t address) {
@@ -540,7 +540,7 @@ void MPU6050_readMemoryBlock(uint8_t* data, uint16_t dataSize, uint8_t bank, uin
         if (chunkSize > 256 - address) chunkSize = 256 - address;
 
         // read the chunk of data as specified
-        IICwriteBytes(devAddr, MPU6050_RA_MEM_R_W, chunkSize, data + i);
+        IICWriteBytes(devAddr, MPU6050_RA_MEM_R_W, chunkSize, data + i);
 
         // increase byte index by [chunkSize]
         i += chunkSize;
@@ -619,7 +619,7 @@ void MPU6050_setZGyroOffsetTC(int8_t offset) {
  */
 void MPU6050_setSlaveAddress(uint8_t num, uint8_t address) {
     if (num > 3) return;
-    IICwriteByte(devAddr, MPU6050_RA_I2C_SLV0_ADDR + num * 3, address);
+    IICWriteByte(devAddr, MPU6050_RA_I2C_SLV0_ADDR + num * 3, address);
 }
 
 /** Reset the I2C Master.
@@ -804,8 +804,8 @@ void IMU(void) {
 void to_ground(void) {
 	u16	t[6] = { 0 };
 	MPU6050_READ(t);
-	message(ZERO_PADDING, t);
-	//delay_ms(10);
+	message(SCALE, t);
+	delay_ms(10);
 }
 
 #define GET_ROW_PITCH
@@ -818,49 +818,43 @@ void Accel_GetAngle(void) {
 #ifdef GET_ROW_PITCH
     roll = atan((float)t[1] / t[2]) * 57.2957;
     pitch = asin(-(s16)t[0] / 8192.0f) * 57.2957;
-	printf("%.2f,%.2f\n", roll, pitch);
+	printf("%.2f,%.2f\r\n", roll, pitch);
 #else
     X_Angle = t[0] / 8192.0f;
     X_Angle = acos(MAX(-1, MIN(1, X_Angle))) * 57.2957;
     Y_Angle = t[1] / 8192.0f;
     Y_Angle = acos(MAX(-1, MIN(1, Y_Angle))) * 57.2957;
-    printf("%.2f,%.2f\n", X_Angle, Y_Angle);
+    printf("%.2f,%.2f\r\n", X_Angle, Y_Angle);
 #endif
     //delay_ms(20);
 }
 
 static float roll_t = 0, pitch_t = 0;
+static float roll_k_1 = 0, pitch_k_1 = 0, yaw_k_1 = 0, roll_k = 0, pitch_k = 0, yaw_k = 0;
 
 void Gyro_GetAngle(void) {
     static bool inited = false;
-    static float haltT = 0.001, wx = 0, wy = 0;
+    static float haltT = 0.02, wx = 0, wy = 0, wz = 0;
     int i = 0;
     u16	t[6] = { 0 };
-    if (inited == false) {
-        for (i = 0; i < 100; i++)
-        {
-			MPU6050_READ(t);
-			zero_correct(t);
-			roll_t = atan((float)t[1] / t[2]) * 57.2957;
-			pitch_t = asin(-(s16)t[0] / 8192.0f) * 57.2957;
-			//printf("%d\t%d\r\n", t[0], t[1]);
-            //printf("%lf,%lf\r\n", roll_t, pitch_t);
-            delay_ms(20);
-        }
-        roll_t = 0;
-        pitch_t = 0;
-        //printf("roll = %lf\tpitch = %lf\r\n", roll_t, pitch_t);
-        inited = true;
-        return;
-    }
-	MPU6050_READ(t);
+
+    MPU6050_READ(t);
 	zero_correct(t);
     wx = (s16)t[3] / 16.384f;
     wy = (s16)t[4] / 16.384f;
+    wz = (s16)t[5] / 16.384f;
+    roll_k = roll_k_1 + wx * haltT + (sin(roll_k_1) * sin(pitch_k_1) / cos(pitch_k_1)) * wy * haltT + 
+                (cos(roll_k_1) * sin(pitch_k_1) / cos(pitch_k_1)) * wz * haltT;
+    pitch_k = pitch_k_1 + cos(roll_k_1) * wy * haltT - sin(roll_k_1) * wz * haltT;
+    yaw_k = yaw_k_1 + sin(yaw_k_1) / cos(yaw_k_1) * wy * haltT + cos(roll_k_1) / cos(pitch_k_1) * wz * haltT;
     //printf("%lf, %lf\r\n", wx, wy);
-    roll_t = roll_t + (wx * haltT) * 57.2957;
-    pitch_t = pitch_t + (wy * haltT) * 57.2957;
-    printf("%.2f,%.2f\n", roll_t, pitch_t);
+    //roll_t = roll_t + (wx * haltT) * 57.2957;
+    //pitch_t = pitch_t + (wy * haltT) * 57.2957;
+    printf("%.2f,%.2f\r\n", roll_k, pitch_k);
+
+    roll_k_1 = roll_k;
+    pitch_k_1 = pitch_k;
+
     delay_ms(20);
 }
 

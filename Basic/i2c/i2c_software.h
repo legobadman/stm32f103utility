@@ -58,8 +58,8 @@ u8 IIC_Read_One_Byte(u8 daddr, u8 addr);
 unsigned char I2C_Readkey(unsigned char I2C_Addr);
 
 unsigned char I2C_ReadOneByte(unsigned char I2C_Addr, unsigned char addr);
-unsigned char IICwriteByte(unsigned char dev, unsigned char reg, unsigned char data);
-u8 IICwriteBytes(u8 dev, u8 reg, u8 length, u8* data);
+unsigned char IICWriteByte(unsigned char dev, unsigned char reg, unsigned char data);
+u8 IICWriteBytes(u8 dev, u8 reg, u8 length, u8* data);
 u8 IICwriteBits(u8 dev, u8 reg, u8 bitStart, u8 length, u8 data);
 u8 IICwriteBit(u8 dev, u8 reg, u8 bitNum, u8 data);
 u8 IICReadBytes(u8 dev, u8 reg, u8 length, u8* data);

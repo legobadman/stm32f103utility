@@ -49,8 +49,8 @@ unsigned char bmp280_init()
 	
 	/* 读取校准数据 */
 	IICReadBytes(BMP280_ADDR, BMP280_TEMPERATURE_CALIB_DIG_T1_LSB_REG, 24, (u8*)&bmp280Cal);
-	IICwriteByte(BMP280_ADDR, BMP280_CTRL_MEAS_REG, BMP280_MODE);
-	IICwriteByte(BMP280_ADDR, BMP280_CONFIG_REG, 5 << 2);
+	IICWriteByte(BMP280_ADDR, BMP280_CTRL_MEAS_REG, BMP280_MODE);
+	IICWriteByte(BMP280_ADDR, BMP280_CONFIG_REG, 5 << 2);
 	
 	/* 读取校准数据 */
 	isInit = true;

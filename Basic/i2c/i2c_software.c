@@ -212,7 +212,7 @@ u8 IICReadBytes(u8 dev, u8 reg, u8 length, u8* data) {
 		*data  将要写的数据的首地址
 返回   返回是否成功
 *******************************************************************************/
-u8 IICwriteBytes(u8 dev, u8 reg, u8 length, u8* data) {
+u8 IICWriteBytes(u8 dev, u8 reg, u8 length, u8* data) {
 
 	u8 count = 0;
 	IIC_Start();
@@ -250,8 +250,8 @@ u8 IICreadByte(u8 dev, u8 reg, u8* data) {
 		data  将要写入的字节
 返回   1
 *******************************************************************************/
-unsigned char IICwriteByte(unsigned char dev, unsigned char reg, unsigned char data) {
-	return IICwriteBytes(dev, reg, 1, &data);
+unsigned char IICWriteByte(unsigned char dev, unsigned char reg, unsigned char data) {
+	return IICWriteBytes(dev, reg, 1, &data);
 }
 
 /**************************实现函数********************************************
@@ -275,7 +275,7 @@ u8 IICwriteBits(u8 dev, u8 reg, u8 bitStart, u8 length, u8 data)
 		data >>= (7 - bitStart);
 		b &= mask;
 		b |= data;
-		return IICwriteByte(dev, reg, b);
+		return IICWriteByte(dev, reg, b);
 	}
 	else {
 		return 0;
@@ -298,5 +298,5 @@ u8 IICwriteBit(u8 dev, u8 reg, u8 bitNum, u8 data) {
 	IICreadByte(dev, reg, &b);
 	b = (data != 0) ? (b | (1 << bitNum)) : (b & ~(1 << bitNum));
 
-	return IICwriteByte(dev, reg, b);
+	return IICWriteByte(dev, reg, b);
 }
